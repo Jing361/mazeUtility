@@ -16,11 +16,11 @@ default:$(name).exe
 $(name).exe:$(name).o shader.o
 	$(CC) $(name).o shader.o -o $(name).exe $(lflags) $(libs)
 
-$(name).o:$(name).cc
+$(name).o:$(name).cc model.cc
 	$(CC) $(cflags) $(name).cc
 
 shader.o:shader.cc
 	$(CC) $(cflags) shader.cc
   
 clean:
-	rm $(name).o shader.o core $(name).exe
+	rm $(name).o shader.o model.o core $(name).exe
