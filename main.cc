@@ -6,6 +6,8 @@
 #include"model.hh"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode){
+  (void)scancode;//UNUSED
+  (void)mode;//UNUSED
   if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
     glfwSetWindowShouldClose(window, GL_TRUE);
   }
@@ -49,15 +51,24 @@ int main(){
   
   GLfloat vertices[] = {
     //vertices            //Colors
-     0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,
-     0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f
+    0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
+    0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
+   -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
+   -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
   };
   GLuint indices[]{
     0, 1, 3,
     1, 2, 3
   };
-  model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)), true);
+  GLfloat texCoords[] = {
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    0.5f, 1.0f
+  };
+  
+  model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)), true,
+            indices, indices+(sizeof(indices) / sizeof(GLuint)),
+            texCoords, texCoords+(sizeof(texCoords) / sizeof(GLfloat)));
 
   glfwSetKeyCallback(window, key_callback);
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -72,9 +83,9 @@ int main(){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
   
-    program.use();
+    program();
     //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-    tri.render();
+    tri.render(program.getTarget());
     
     glfwSwapBuffers(window);
   }

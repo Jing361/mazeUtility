@@ -14,7 +14,7 @@ private:
 public:
   shader(const GLchar* vertexPath, const GLchar* fragmentPath);
   
-  void use();
+  void operator()();
   GLuint getTarget();
 };
 

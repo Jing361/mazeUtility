@@ -23,7 +23,7 @@ shader::shader(const GLchar* vertexPath, const GLchar* fragmentPath):
   glDeleteShader(fragmentSource);
 }
 
-void shader::use(){
+void shader::operator()(){
   glUseProgram(m_program);
 }
 
