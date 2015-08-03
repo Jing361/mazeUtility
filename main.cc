@@ -33,7 +33,7 @@ int main(){
   glfwMakeContextCurrent(window);
   
   if(gl3wInit()){
-    std::cerr << "Failed to initialize GLFW" << std::endl;
+    std::cerr << "Failed to initialize GL3W" << std::endl;
     glfwTerminate();
     return -1;
   }

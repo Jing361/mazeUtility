@@ -7,7 +7,7 @@ lflags:=-L.
 libs:=gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
 wflags:=-Wall -Wextra -pedantic -std=c++11
 dflags:=-ggdb3
-cflags:=$(iflags) $(wflags) -O2 -c -m64
+cflags:=$(dflags) $(iflags) $(wflags) -c -m64
 
 name:=main
 
