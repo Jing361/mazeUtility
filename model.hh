@@ -8,7 +8,7 @@ class model{
 private:
   std::vector<GLfloat> m_vertices;
   std::vector<GLuint> m_indices;
-  std::vector<GLfloat> m_texture;
+  bool m_hasTexture;
   GLuint m_VAO;
   GLuint m_VBO;
   GLuint m_EBO;
@@ -17,11 +17,10 @@ private:
 public:
 //somehow handle additional attributes like color
   template<typename vertItr,
-  typename texItr = std::vector<GLuint>::iterator,
   typename idxItr = std::vector<GLfloat>::iterator>
   model(vertItr firstVert, vertItr lastVert, bool hasColor = false,
         idxItr firstIdx = idxItr(), idxItr lastIdx = idxItr(),
-        texItr firstTex = texItr(), texItr lastTex = texItr());
+        const char* imageFile = 0);
   ~model();
   
   void render(GLuint prog);

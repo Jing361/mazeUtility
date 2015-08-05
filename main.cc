@@ -50,25 +50,20 @@ int main(){
   shader program("vertex.glsl", "fragment.glsl");
   
   GLfloat vertices[] = {
-    //vertices            //Colors
-    0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
-    0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
-   -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
-   -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
+    //vertices           //Colors           //Texture coords
+    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
+    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
+   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
+   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
   };
-  GLuint indices[]{
+  GLuint indices[] = {
     0, 1, 3,
     1, 2, 3
-  };
-  GLfloat texCoords[] = {
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    0.5f, 1.0f
   };
   
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)), true,
             indices, indices+(sizeof(indices) / sizeof(GLuint)),
-            texCoords, texCoords+(sizeof(texCoords) / sizeof(GLfloat)));
+            "container.jpg");
 
   glfwSetKeyCallback(window, key_callback);
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

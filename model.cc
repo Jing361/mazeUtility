@@ -2,20 +2,19 @@
 #include"SOIL.h"
 
 template<typename vertItr,
-typename texItr,
 typename idxItr>
 model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
       idxItr firstIdx, idxItr lastIdx,
-      texItr firstTex, texItr lastTex):
+      const char* imageFile):
   m_vertices(firstVert, lastVert),
   m_indices(firstIdx, lastIdx),
-  m_texture(firstTex, lastTex){
+  m_hasTexture(imageFile != 0){
   unsigned int stride = 3;
   unsigned int attr = 0;
   if(hasColor){
     stride += 3;
   }
-  if(firstTex != lastTex){
+  if(m_hasTexture){
     stride += 2;
   }
   
@@ -32,7 +31,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   
   if(firstIdx != lastIdx){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size(), m_indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), m_indices.data(), GL_STATIC_DRAW);
   }
 
   //position
@@ -46,7 +45,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   }
   ++attr;
   
-  if(firstTex != lastTex){
+  if(m_hasTexture){
     glVertexAttribPointer(attr, 2, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
   }
@@ -54,7 +53,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
   
-  if(m_texture.size() > 0){
+  if(m_hasTexture){
     int width, height;
     unsigned char* image;
     
@@ -67,7 +66,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    image = SOIL_load_image("container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+    image = SOIL_load_image(imageFile, &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
@@ -83,7 +82,7 @@ model::~model(){
 }
 
 void model::render(GLuint prog){
-  if(m_texture.size() > 0){
+  if(m_hasTexture){
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_tex);
     glUniform1i(glGetUniformLocation(prog, "ourTexture"), 0);
