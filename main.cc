@@ -61,9 +61,12 @@ int main(){
     1, 2, 3
   };
   
+  std::vector<std::string> textures;
+  textures.push_back(std::string("container.jpg"));
+  textures.push_back(std::string("awesomeface.png"));
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)), true,
             indices, indices+(sizeof(indices) / sizeof(GLuint)),
-            "container.jpg");
+            textures.begin(), textures.end());
 
   glfwSetKeyCallback(window, key_callback);
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

@@ -1,20 +1,21 @@
 #include<iostream>
+#include<sstream>
 #include"SOIL.h"
 
 template<typename vertItr,
-typename idxItr>
+typename idxItr,
+typename texItr>
 model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
       idxItr firstIdx, idxItr lastIdx,
-      const char* imageFile):
+      texItr firstTex, texItr lastTex):
   m_vertices(firstVert, lastVert),
-  m_indices(firstIdx, lastIdx),
-  m_hasTexture(imageFile != 0){
+  m_indices(firstIdx, lastIdx){
   unsigned int stride = 3;
   unsigned int attr = 0;
   if(hasColor){
     stride += 3;
   }
-  if(m_hasTexture){
+  if(firstTex != lastTex){
     stride += 2;
   }
   
@@ -45,7 +46,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   }
   ++attr;
   
-  if(m_hasTexture){
+  if(firstTex != lastTex){
     glVertexAttribPointer(attr, 2, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
   }
@@ -53,12 +54,13 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
   
-  if(m_hasTexture){
+  for(auto it = firstTex; it != lastTex; ++it){
     int width, height;
     unsigned char* image;
+    GLuint tex;
     
-    glGenTextures(1, &m_tex);
-    glBindTexture(GL_TEXTURE_2D, m_tex);
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -66,12 +68,14 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    image = SOIL_load_image(imageFile, &width, &height, 0, SOIL_LOAD_RGB);
+    image = SOIL_load_image((*it).c_str(), &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
     
     glBindTexture(GL_TEXTURE_2D, 0);
+    
+    m_textures.push_back(tex);
   }
 }
 
@@ -82,13 +86,17 @@ model::~model(){
 }
 
 void model::render(GLuint prog){
-  if(m_hasTexture){
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-    glUniform1i(glGetUniformLocation(prog, "ourTexture"), 0);
+  unsigned int i = 0;
+  std::string name = "ourTexture";
+  for(auto it = m_textures.begin(); it != m_textures.end(); ++it){
+    std::stringstream ss;
+    ss << i;
+    glActiveTexture(GL_TEXTURE0 + i);
+    glBindTexture(GL_TEXTURE_2D, *it);
+    glUniform1i(glGetUniformLocation(prog, (name + ss.str()).c_str()), i);
+    ++i;
   }
   glBindVertexArray(m_VAO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-  //glDrawArrays(GL_TRIANGLES, 0, 3);
   glBindVertexArray(0);
 }
