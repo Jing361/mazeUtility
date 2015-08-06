@@ -1,5 +1,5 @@
 CC:=g++
-flags:=-Wall -Wextra -pedantic -O2 -std=c++0x
+flags:=-Wall -Wextra -pedantic -std=c++0x
 dflags:=-ggdb3
 cflags:=-c $(dflags)
 
