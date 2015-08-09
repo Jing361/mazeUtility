@@ -1,6 +1,8 @@
 #include<iostream>
 #include<sstream>
 #include"SOIL.h"
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 
 template<typename vertItr,
 typename idxItr,
@@ -96,7 +98,22 @@ void model::render(GLuint prog){
     glUniform1i(glGetUniformLocation(prog, (name + ss.str()).c_str()), i);
     ++i;
   }
+  GLuint transformLoc = glGetUniformLocation(prog, "transform");
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
+  
   glBindVertexArray(m_VAO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
+}
+
+void model::translate(double x, double y, double z){
+  m_transform = glm::translate(m_transform, glm::vec3(x, y, z));
+}
+
+void model::rotate(float r, double x, double y, double z){
+  m_transform = glm::rotate(m_transform, glm::radians(r), glm::vec3(x, y, z));
+}
+
+void model::scale(double x, double y, double z){
+  m_transform = glm::scale(m_transform, glm::vec3(x, y, z));
 }

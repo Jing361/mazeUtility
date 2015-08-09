@@ -2,6 +2,7 @@
 #define __MODEL_HH__
 
 #include<gl3w.h>
+#include<glm/glm.hpp>
 #include<vector>
 #include<string>
 
@@ -14,6 +15,8 @@ private:
   GLuint m_VBO;
   GLuint m_EBO;
   
+  glm::mat4 m_transform;
+  
 public:
 //somehow handle additional attributes like color
   template<typename vertItr,
@@ -25,6 +28,9 @@ public:
   ~model();
   
   void render(GLuint prog);
+  void translate(double x, double y, double z);
+  void rotate(float r, double x, double y, double z);
+  void scale(double x, double y, double z);
 };
 
 #include"model.cc"

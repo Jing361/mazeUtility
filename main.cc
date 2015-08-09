@@ -2,6 +2,9 @@
 #include<glfw3.h>
 #include<iostream>
 #include<cmath>
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 #include"shader.hh"
 #include"model.hh"
 
@@ -14,12 +17,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 int main(){
-  unsigned int glM = 3;
-  unsigned int glm = 3;
+  unsigned int glMajor = 3;
+  unsigned int glminor = 3;
   glfwInit();
   
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glM);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glm);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glminor);
   
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -37,8 +40,8 @@ int main(){
     glfwTerminate();
     return -1;
   }
-  if(!gl3wIsSupported(glM, glm)){
-    std::cerr << "OpenGL " << glM << "." << glm << " not supported" << std::endl;
+  if(!gl3wIsSupported(glMajor, glminor)){
+    std::cerr << "OpenGL " << glMajor << "." << glminor << " not supported" << std::endl;
     glfwTerminate();
     return -1;
   }
@@ -71,6 +74,7 @@ int main(){
   glfwSetKeyCallback(window, key_callback);
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  tri.rotate(90, 0.0, 0.0, 1.0);
   //Wireframe mode
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   while(!glfwWindowShouldClose(window)){

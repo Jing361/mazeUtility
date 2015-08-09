@@ -1,13 +1,14 @@
 CC:=g++
 iglfw:=-I"C:\Program Files\Common Files\MinGW\glfw\include"
 igl3w:=-I"C:\Program Files\Common Files\MinGW\gl3w\include"
-iflags:=$(iglfw) $(igl3w)
+iglm:=-I"C:\Program Files\Common Files\MinGW\glm"
+iflags:=$(iglfw) $(igl3w) $(iglm)
 lflags:=-L.
 #libs:=-lopengl32 -lgdi32 -luser32 -lkernel32 -lglfw3# -Wl,--subsystem,windows
 libs:=gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
 wflags:=-Wall -Wextra -pedantic -std=c++11
 dflags:=-ggdb3
-cflags:=$(dflags) $(iflags) $(wflags) -c -m64
+cflags:=$(iflags) $(wflags) -c -m64
 
 name:=main
 
