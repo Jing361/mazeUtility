@@ -55,14 +55,14 @@ int main(){
   
   shader program("vertex.glsl", "fragment.glsl");
   
-  GLfloat vertices[] = {
+  /*GLfloat vertices[] = {
     //vertices           //Colors           //Texture coords
     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
-  };
-  /*GLfloat vertices[] = {
+  };*/
+  GLfloat vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -104,7 +104,7 @@ int main(){
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-  };*/
+  };
   GLuint indices[] = {
     0, 1, 3,
     1, 2, 3
@@ -113,9 +113,9 @@ int main(){
   std::vector<std::string> textures;
   textures.push_back(std::string("container.jpg"));
   textures.push_back(std::string("awesomeface.png"));
-  model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)), true,
-            indices, indices+(sizeof(indices) / sizeof(GLuint)),
-            //indices, indices,
+  model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)), false,
+            //indices, indices+(sizeof(indices) / sizeof(GLuint)),
+            std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
             textures.begin(), textures.end());
 
   glfwSetKeyCallback(window, key_callback);

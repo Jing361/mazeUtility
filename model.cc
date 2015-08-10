@@ -24,7 +24,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   
   glGenVertexArrays(1, &m_VAO);
   glGenBuffers(1, &m_VBO);
-  if(firstIdx != lastIdx){
+  if(m_indices.size() > 0){
     glGenBuffers(1, &m_EBO);
   }
   
@@ -33,7 +33,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
   glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), m_vertices.data(), GL_STATIC_DRAW);
   
-  if(firstIdx != lastIdx){
+  if(m_indices.size() > 0){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), m_indices.data(), GL_STATIC_DRAW);
   }
@@ -85,7 +85,9 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
 model::~model(){
   glDeleteVertexArrays(1, &m_VAO);
   glDeleteBuffers(1, &m_VBO);
-  glDeleteBuffers(1, &m_EBO);
+  if(m_indices.size() > 0){
+    glDeleteBuffers(1, &m_EBO);
+  }
 }
 
 void model::render(GLuint prog){
@@ -103,15 +105,11 @@ void model::render(GLuint prog){
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
   
   glBindVertexArray(m_VAO);
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-  //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-  //glDrawArrays(GL_TRIANGLES, 0, m_nVert);
-  //glDrawElements(GL_TRIANGLES, m_nVert, GL_UNSIGNED_INT, 0);
-  /*if(m_indices.size() > 0){
-    glDrawElements(GL_TRIANGLES, m_vertices.size(), GL_UNSIGNED_INT, 0);
+  if(m_indices.size() > 0){
+    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
   } else {
-    glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
-  }*/
+    glDrawArrays(GL_TRIANGLES, 0, m_nVert);
+  }
   glBindVertexArray(0);
 }
 
