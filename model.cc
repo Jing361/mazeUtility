@@ -8,8 +8,8 @@ template<typename vertItr,
 typename idxItr,
 typename texItr>
 model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
-      idxItr firstIdx, idxItr lastIdx,
-      texItr firstTex, texItr lastTex):
+             idxItr firstIdx, idxItr lastIdx,
+             texItr firstTex, texItr lastTex):
   m_vertices(firstVert, lastVert),
   m_indices(firstIdx, lastIdx){
   unsigned int stride = 3;
@@ -20,6 +20,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   if(firstTex != lastTex){
     stride += 2;
   }
+  m_nVert = m_vertices.size() / stride;
   
   glGenVertexArrays(1, &m_VAO);
   glGenBuffers(1, &m_VBO);
@@ -103,6 +104,14 @@ void model::render(GLuint prog){
   
   glBindVertexArray(m_VAO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+  //glDrawArrays(GL_TRIANGLES, 0, m_nVert);
+  //glDrawElements(GL_TRIANGLES, m_nVert, GL_UNSIGNED_INT, 0);
+  /*if(m_indices.size() > 0){
+    glDrawElements(GL_TRIANGLES, m_vertices.size(), GL_UNSIGNED_INT, 0);
+  } else {
+    glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
+  }*/
   glBindVertexArray(0);
 }
 

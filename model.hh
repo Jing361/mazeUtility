@@ -14,6 +14,7 @@ private:
   GLuint m_VAO;
   GLuint m_VBO;
   GLuint m_EBO;
+  unsigned int m_nVert;
   
   glm::mat4 m_transform;
   
