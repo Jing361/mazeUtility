@@ -120,6 +120,7 @@ int main(){
 
   glfwSetKeyCallback(window, key_callback);
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glEnable(GL_DEPTH_TEST);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   //Wireframe mode
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -135,7 +136,7 @@ int main(){
     //GLint vertexColorLocation = glGetUniformLocation(program.getTarget(), "ourColor");
     
     glfwPollEvents();
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
     program();
     //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
