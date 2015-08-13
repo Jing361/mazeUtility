@@ -6,7 +6,7 @@ iflags:=$(iglfw) $(igl3w) $(iglm)
 lflags:=-L.
 #libs:=-lopengl32 -lgdi32 -luser32 -lkernel32 -lglfw3# -Wl,--subsystem,windows
 libs:=gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
-wflags:=-Wall -Wextra -pedantic -std=c++11
+wflags:=-Wall -Wextra -pedantic -std=c++14
 dflags:=-ggdb3
 cflags:=$(iflags) $(wflags) -c -m64
 
@@ -14,8 +14,8 @@ name:=main
 
 default:$(name).exe
 
-$(name).exe:$(name).o shader.o
-	$(CC) $(name).o shader.o -o $(name).exe $(lflags) $(libs)
+$(name).exe:$(name).o shader.o camera.o
+	$(CC) $(name).o shader.o camera.o -o $(name).exe $(lflags) $(libs)
 
 $(name).o:$(name).cc model.cc
 	$(CC) $(cflags) $(name).cc
@@ -23,5 +23,8 @@ $(name).o:$(name).cc model.cc
 shader.o:shader.cc
 	$(CC) $(cflags) shader.cc
   
+camera.o:camera.cc
+	$(CC) $(cflags) camera.cc
+  
 clean:
-	rm $(name).o shader.o model.o core $(name).exe
+	rm $(name).o shader.o model.o camera.o core $(name).exe
