@@ -14,6 +14,7 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   m_indices(firstIdx, lastIdx){
   unsigned int stride = 3;
   unsigned int attr = 0;
+  unsigned int offset = 0;
   if(hasColor){
     stride += 3;
   }
@@ -39,19 +40,22 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   }
 
   //position
-  glVertexAttribPointer(attr, 3, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)0);
+  glVertexAttribPointer(attr, 3, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)offset);
   glEnableVertexAttribArray(attr);
+  offset += 3;
   ++attr;
   //color
   if(hasColor){
-    glVertexAttribPointer(attr, 3, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(attr, 3, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
+    offset += 3;
   }
   ++attr;
   
   if(firstTex != lastTex){
-    glVertexAttribPointer(attr, 2, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+    glVertexAttribPointer(attr, 2, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
+    offset += 2;
   }
   
   glBindBuffer(GL_ARRAY_BUFFER, 0);
