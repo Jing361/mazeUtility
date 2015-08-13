@@ -20,7 +20,8 @@ int main(int argc, char** argv){
   std::cout << mazeStr << std::endl;
   world w(mazeStr);
   AI ai(&w);
-  
+  ai.generate();
+  /*
   std::vector<Node> results = ai();
   
   for(auto itr = results.begin(); itr != results.end(); ++itr){
@@ -66,6 +67,6 @@ int main(int argc, char** argv){
       lastZ = std::get<2>(*it);
     }
     std::cout << std::endl;
-  }
+  }*/
   return 0;
 }

@@ -43,6 +43,7 @@ public:
   }
 
   std::vector<Node> operator()();
+  void generate();
 };
 
 #endif
