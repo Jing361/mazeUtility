@@ -55,14 +55,49 @@ int main(){
   
   shader program("vertex.glsl", "fragment.glsl");
   
+  //rectangle
   /*GLfloat vertices[] = {
     //vertices           //Colors           //Texture coords
     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
+  };
+  
+  GLuint indices[] = {
+    0, 1, 3,
+    1, 2, 3
   };*/
+  //cube with fucked texture coordinates
+  /*GLfloat vertices[] = {
+    -0.5f,  0.5f,  0.5f,    0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,    0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,    1.0f, 1.0f,
+     
+    -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,    1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,    0.0f, 0.0f
+  };
+  
+  GLuint indices[] = {
+    0, 1, 2,
+    1, 2, 3,
+    4, 5, 6,
+    5, 6, 7,
+    0, 4, 5,
+    0, 1, 5,
+    1, 3, 5,
+    3, 5, 7,
+    2, 3, 6,
+    3, 6, 7,
+    0, 4, 6,
+    0, 2, 6
+  };*/
+  //cube
   GLfloat vertices[] = {
+    //bottom
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -70,13 +105,15 @@ int main(){
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
+    //top
     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 1.0f,
      0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
      0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
+    //left
     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
@@ -84,6 +121,7 @@ int main(){
     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
+    //right
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
      0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
@@ -91,6 +129,7 @@ int main(){
      0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
+     //front
     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
      0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
@@ -98,16 +137,13 @@ int main(){
     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
+    //back
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-  };
-  GLuint indices[] = {
-    0, 1, 3,
-    1, 2, 3
   };
   
   std::vector<std::string> textures;
@@ -134,6 +170,7 @@ int main(){
     //GLfloat timeValue = glfwGetTime();
     //GLfloat greenValue = (sin(timeValue) / 2) + 0.5f;
     //GLint vertexColorLocation = glGetUniformLocation(program.getTarget(), "ourColor");
+    //tri.rotate(0.5, 0.0, 1.0, 1.0);
     
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
