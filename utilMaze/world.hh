@@ -9,6 +9,8 @@ public:
   world(std::string mazeStr);
   ~world();
   
+  void print();
+  
   space*** maze;
   unsigned int width;
   unsigned int height;

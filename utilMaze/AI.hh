@@ -10,7 +10,7 @@
 class AI{
 private:
 //use a pointer to prevent world destructor running
-  const world* w;
+  world* w;
   
   class heuristic{
   public:
@@ -35,10 +35,11 @@ private:
     }
   };
   
-  std::vector<Node> expand(Node node);
+  std::vector<Node> expandSearch(Node node);
+  std::vector<position> expandGenerate(position pos);
   
 public:
-  AI(const world* x):
+  AI(world* x):
     w(x){
   }
 

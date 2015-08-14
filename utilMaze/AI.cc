@@ -3,9 +3,7 @@
 #include<chrono>
 #include"AI.hh"
 
-#include<iostream>
-
-std::vector<Node> AI::expand(Node node){
+std::vector<Node> AI::expandSearch(Node node){
   std::vector<Node> ret;
   coord x = std::get<0>(node.back());
   coord y = std::get<1>(node.back());
@@ -44,6 +42,34 @@ std::vector<Node> AI::expand(Node node){
   return ret;
 }
 
+std::vector<position> AI::expandGenerate(position pos){
+  std::vector<position> ret;
+  coord x = std::get<0>(pos);
+  coord y = std::get<1>(pos);
+  coord z = std::get<2>(pos);
+  
+  if(x > 1){
+    ret.push_back(position(x - 2, y, z));
+  }
+  if(y > 1){
+    ret.push_back(position(x, y - 2, z));
+  }
+  if(z > 0){
+    ret.push_back(position(x, y, z - 1));
+  }
+  if(x < w->width - 2){
+    ret.push_back(position(x + 2, y, z));
+  }
+  if(y < w->height - 2){
+    ret.push_back(position(x, y + 2, z));
+  }
+  if(z < w->depth - 1){
+    ret.push_back(position(x, y, z + 1));
+  }
+  
+  return ret;
+}
+
 std::vector<Node> AI::operator()(){
   heuristic h(w);
   std::priority_queue<Node, std::vector<Node>, heuristic> frontier(h);
@@ -61,7 +87,7 @@ std::vector<Node> AI::operator()(){
       continue;
     }
     
-    std::vector<Node> nodes = expand(thisNode);
+    std::vector<Node> nodes = expandSearch(thisNode);
     
     for(auto it = nodes.begin(); it != nodes.end(); ++it){
       if(std::find(explored.begin(), explored.end(), *it) != explored.end()){
@@ -80,9 +106,8 @@ std::vector<Node> AI::operator()(){
 void AI::generate(){
   std::mt19937::result_type seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
   std::mt19937 engine(seed);
-  std::uniform_int_distribution<unsigned int> dDist(0, 3);//direction distribution
   std::uniform_int_distribution<unsigned int> sDist(0, 1);//start distribution
-  std::vector<position> frontier;
+  std::vector<std::pair<position, position>> frontier;
   std::vector<position> explored;
   
   //initialize world
@@ -112,82 +137,105 @@ void AI::generate(){
   //select start position
   //0 selects side walls
   if(sDist(engine) == 0){
-    std::uniform_int_distribution<unsigned int> iDist(0, w->width);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth);//depth distribution
-    unsigned int W = iDist(engine);
+    std::uniform_int_distribution<unsigned int> iDist(0, (w->width - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
+    unsigned int W = (iDist(engine) * 2) - 1;
     unsigned int H;
     unsigned int D = deepDist(engine);
     if(sDist(engine) == 0){
       H = 0;
     } else {
-      H = w->height;
+      H = w->height - 1;
     }
     w->maze[W][H][D] = START;
+    w->start = position(W, H, D);
   } else {
-    std::uniform_int_distribution<unsigned int> iDist(0, w->height);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth);//depth distribution
-    unsigned int H = iDist(engine);
+    std::uniform_int_distribution<unsigned int> iDist(0, (w->height - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
+    unsigned int H = (iDist(engine) * 2) - 1;
     unsigned int W;
     unsigned int D = deepDist(engine);
     if(sDist(engine) == 0){
       W = 0;
     } else {
-      W = w->width;
+      W = w->width - 1;
     }
     w->maze[W][H][D] = START;
+    w->start = position(W, H, D);
   }
   
+  //select end position
+  //0 selects side walls
   if(sDist(engine) == 0){
-    std::uniform_int_distribution<unsigned int> iDist(0, w->width);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth);//depth distribution
-    unsigned int W = iDist(engine);
+    std::uniform_int_distribution<unsigned int> iDist(0, (w->width - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
+    unsigned int W = (iDist(engine) * 2) - 1;
     unsigned int H;
     unsigned int D = deepDist(engine);
     if(sDist(engine) == 0){
       H = 0;
     } else {
-      H = w->height;
+      H = w->height - 1;
     }
     w->maze[W][H][D] = END;
+    w->end = position(W, H, D);
   } else {
-    std::uniform_int_distribution<unsigned int> iDist(0, w->height);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth);//depth distribution
-    unsigned int H = iDist(engine);
+    std::uniform_int_distribution<unsigned int> iDist(0, (w->height - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
+    unsigned int H = (iDist(engine) * 2) - 1;
     unsigned int W;
     unsigned int D = deepDist(engine);
     if(sDist(engine) == 0){
       W = 0;
     } else {
-      W = w->width;
+      W = w->width - 1;
     }
     w->maze[W][H][D] = END;
+    w->end = position(W, H, D);
   }
-  
-  
-  for(unsigned int k = 0; k < w->depth; ++k){
-    for(unsigned int i = 0; i < w->width; ++i){
-      for(unsigned int j = 0; j < w->height; ++j){
-        switch(w->maze[i][j][k]){
-        case WALL:
-          std::cout << "+";
-        break;
-        case EMPTY:
-          std::cout << " ";
-        break;
-        case START:
-          std::cout << "S";
-        break;
-        case END:
-          std::cout << "E";
-        break;
-        case STAIR:
-          std::cout << "T";
-        break;
-        };
-      }
-      std::cout << std::endl;
+
+  position temp = w->start;
+  //push seed into maze
+  if(std::get<0>(temp) == 0){
+    std::get<0>(temp) = 1;
+  } else if(std::get<0>(temp) == w->width - 1){
+    std::get<0>(temp) = w->width - 2;
+  }
+  if(std::get<1>(temp) == 0){
+    std::get<1>(temp) = 1;
+  } else if(std::get<1>(temp) == w->height - 1){
+    std::get<1>(temp) = w->height - 2;
+  }
+
+  frontier.push_back(std::pair<position, position>(temp, temp));
+  while(!frontier.empty()){
+    std::uniform_int_distribution<unsigned int> dDist(0, frontier.size() - 1);
+    unsigned int idx = dDist(engine);
+    std::pair<position, position> thisNode = frontier[idx];
+    frontier.erase(frontier.begin() + idx);
+    
+    if(std::find(explored.begin(), explored.end(), thisNode.second) != explored.end()){
+      continue;
     }
-    std::cout << std::endl;
+    std::vector<position> nodes = expandGenerate(thisNode.second);
+    for(auto it = nodes.begin(); it != nodes.end(); ++it){
+      if(std::find(explored.begin(), explored.end(), *it) != explored.end()){
+        continue;
+      }
+      frontier.push_back(std::pair<position, position>(thisNode.second, *it));
+    }
+    explored.push_back(thisNode.second);
+    
+    //remove wall
+    coord x1 = std::get<0>(thisNode.first);
+    coord x2 = std::get<0>(thisNode.second);
+    coord y1 = std::get<1>(thisNode.first);
+    coord y2 = std::get<1>(thisNode.second);
+    coord z1 = std::get<2>(thisNode.first);
+    coord z2 = std::get<2>(thisNode.second);
+    w->maze[(x1 + x2) / 2][y1][z1] = EMPTY;
+    w->maze[x1][(y1 + y2) / 2][z1] = EMPTY;
+    w->maze[x1][y1][(z1 + z2) / 2] = EMPTY;
   }
-  
+  w->print();
 }

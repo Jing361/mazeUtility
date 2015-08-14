@@ -1,7 +1,7 @@
 CC:=g++
-flags:=-Wall -Wextra -pedantic -std=c++11 -O2
+flags:=-Wall -Wextra -pedantic -std=c++14 -O2
 dflags:=-ggdb3
-cflags:=-c
+cflags:=-c -m64
 
 name:=main
 

@@ -1,3 +1,4 @@
+#include<iostream>
 #include<sstream>
 #include"world.hh"
 
@@ -79,4 +80,32 @@ world::~world(){
   }
   delete[] maze;
   std::cout << "deleted" << std::endl;*/
+}
+
+void world::print(){
+  for(unsigned int k = 0; k < depth; ++k){
+    for(unsigned int i = 0; i < width; ++i){
+      for(unsigned int j = 0; j < height; ++j){
+        switch(maze[i][j][k]){
+        case WALL:
+          std::cout << "+";
+        break;
+        case EMPTY:
+          std::cout << " ";
+        break;
+        case START:
+          std::cout << "S";
+        break;
+        case END:
+          std::cout << "E";
+        break;
+        case STAIR:
+          std::cout << "T";
+        break;
+        };
+      }
+      std::cout << std::endl;
+    }
+    std::cout << std::endl;
+  }
 }
