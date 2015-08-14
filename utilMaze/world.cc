@@ -2,6 +2,20 @@
 #include<sstream>
 #include"world.hh"
 
+
+world::world(unsigned int x, unsigned int y, unsigned int z):
+  width(x),
+  height(y),
+  depth(z){
+  maze = new space**[width];
+  for(unsigned int i = 0; i < width; ++i){
+    maze[i] = new space*[height];
+    for(unsigned int j = 0; j < height; ++j){
+      maze[i][j] = new space[depth];
+    }
+  }
+}
+
 world::world(std::string mazeStr){
   std::stringstream ss(mazeStr);
   std::string line;

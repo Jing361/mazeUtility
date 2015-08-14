@@ -19,6 +19,7 @@ int main(int argc, char** argv){
   }
   std::cout << mazeStr << std::endl;
   world w(mazeStr);
+  //world w(101, 101, 1);
   AI ai(&w);
   ai.generate();
   /*

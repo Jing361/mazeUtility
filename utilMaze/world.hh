@@ -6,6 +6,7 @@
 
 class world{
 public:
+  world(unsigned int x, unsigned int y, unsigned int z);
   world(std::string mazeStr);
   ~world();
   
