@@ -6,7 +6,7 @@ iflags:=$(iglfw) $(igl3w) $(iglm)
 lflags:=-L.
 #libs:=-lopengl32 -lgdi32 -luser32 -lkernel32 -lglfw3# -Wl,--subsystem,windows
 libs:=gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
-wflags:=-Wall -Wextra -pedantic -std=c++14
+wflags:=-Wall -Wextra -pedantic -std=c++14 -O2
 dflags:=-ggdb3
 cflags:=$(iflags) $(wflags) -c -m64
 

@@ -18,15 +18,16 @@ int main(int argc, char** argv){
     mazeStr += line + '\n';
   }
   //world w(mazeStr);
-  world w(11, 11, 2);
+  world w(13, 13, 1);
   AI ai(&w);
   ai.generate();
   w.print();
   
   std::vector<Node> results = ai();
-  std::cout << distance(w.start, w.end) << std::endl;
-  double diff = (double)results.size() / distance(w.start, w.end);
-  std::cout << "difficulty\t" << diff << std::endl;
+  //3 is subtracted from the size to account for the initial position, 
+  //  and moves for each moving into the end positoin and out of the start position
+  std::cout << "difficulty\t" << (double)((*results.begin()).size() - 3) / distance(w.start, w.end) << std::endl;
+  std::cout << std::endl;
   
   for(auto itr = results.begin(); itr != results.end(); ++itr){
     std::cout << (*itr).size() << std::endl;

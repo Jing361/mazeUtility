@@ -11,6 +11,7 @@ public:
   ~world();
   
   void print();
+  void clear();
   
   space*** maze;
   unsigned int width;
