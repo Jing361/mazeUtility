@@ -127,10 +127,6 @@ void world::print(){
 }
 
 void world::clear(){
-  std::mt19937::result_type seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-  std::mt19937 engine(seed);
-  std::uniform_int_distribution<unsigned int> sDist(0, 1);//start distribution
-  
   //initialize world
   for(unsigned int i = 0; i < depth; ++i){
     //perimeter walls
@@ -156,36 +152,18 @@ void world::clear(){
   }
   
   //select start position
-  //0 selects side walls
-  if(sDist(engine) == 0){
-    std::uniform_int_distribution<unsigned int> iDist(1, (width - 1) / 2);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, depth - 1);//depth distribution
-    unsigned int W = (iDist(engine) * 2) - 1;
-    unsigned int H;
-    unsigned int D = deepDist(engine);
-    if(sDist(engine) == 0){
-      H = 0;
-    } else {
-      H = height - 1;
-    }
-    maze[W][H][D] = START;
-    start = position(W, H, D);
-  } else {
-    std::uniform_int_distribution<unsigned int> iDist(1, (height - 1) / 2);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, depth - 1);//depth distribution
-    unsigned int H = (iDist(engine) * 2) - 1;
-    unsigned int W;
-    unsigned int D = deepDist(engine);
-    if(sDist(engine) == 0){
-      W = 0;
-    } else {
-      W = width - 1;
-    }
-    maze[W][H][D] = START;
-    start = position(W, H, D);
-  }
+  place(START, start);
   
   //select end position
+  place(END, end);
+}
+
+void world::place(space sp, position& pos){
+  std::mt19937::result_type seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  std::mt19937 engine(seed);
+  std::uniform_int_distribution<unsigned int> sDist(0, 1);//start distribution
+  
+  //select start position
   //0 selects side walls
   if(sDist(engine) == 0){
     std::uniform_int_distribution<unsigned int> iDist(1, (width - 1) / 2);//idx distribution
@@ -198,8 +176,8 @@ void world::clear(){
     } else {
       H = height - 1;
     }
-    maze[W][H][D] = END;
-    end = position(W, H, D);
+    maze[W][H][D] = sp;
+    pos = position(W, H, D);
   } else {
     std::uniform_int_distribution<unsigned int> iDist(1, (height - 1) / 2);//idx distribution
     std::uniform_int_distribution<unsigned int> deepDist(0, depth - 1);//depth distribution
@@ -211,7 +189,7 @@ void world::clear(){
     } else {
       W = width - 1;
     }
-    maze[W][H][D] = END;
-    end = position(W, H, D);
+    maze[W][H][D] = sp;
+    pos = position(W, H, D);
   }
 }

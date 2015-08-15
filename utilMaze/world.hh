@@ -5,6 +5,9 @@
 #include"stuff.hh"
 
 class world{
+private:
+  void place(space sp, position& pos);
+
 public:
   world(unsigned int x, unsigned int y, unsigned int z);
   world(std::string mazeStr);
