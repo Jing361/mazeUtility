@@ -235,8 +235,10 @@ void AI::generate(){
     coord z2 = std::get<2>(thisNode.second);
     w->maze[(x1 + x2) / 2][y1][z1] = EMPTY;
     w->maze[x1][(y1 + y2) / 2][z1] = EMPTY;
-    w->maze[x1][y1][z1] = STAIR;
-    w->maze[x1][y1][z2] = STAIR;
+    if(z1 != z2){
+      w->maze[x1][y1][z1] = STAIR;
+      w->maze[x1][y1][z2] = STAIR;
+    }
   }
   w->print();
 }

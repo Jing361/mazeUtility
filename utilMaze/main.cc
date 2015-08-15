@@ -17,8 +17,8 @@ int main(int argc, char** argv){
   while(std::getline(maze, line)){
     mazeStr += line + '\n';
   }
-  world w(mazeStr);
-  //world w(101, 101, 1);
+  //world w(mazeStr);
+  world w(11, 11, 2);
   AI ai(&w);
   w.print();
   ai.generate();
