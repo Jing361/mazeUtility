@@ -2,7 +2,6 @@
 #include<sstream>
 #include"world.hh"
 
-
 world::world(unsigned int x, unsigned int y, unsigned int z):
   width(x),
   height(y),
@@ -97,6 +96,7 @@ world::~world(){
 }
 
 void world::print(){
+  std::cout << depth << " floors\n";
   for(unsigned int k = 0; k < depth; ++k){
     for(unsigned int i = 0; i < width; ++i){
       for(unsigned int j = 0; j < height; ++j){

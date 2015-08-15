@@ -137,7 +137,7 @@ void AI::generate(){
   //select start position
   //0 selects side walls
   if(sDist(engine) == 0){
-    std::uniform_int_distribution<unsigned int> iDist(0, (w->width - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> iDist(1, (w->width - 1) / 2);//idx distribution
     std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
     unsigned int W = (iDist(engine) * 2) - 1;
     unsigned int H;
@@ -150,7 +150,7 @@ void AI::generate(){
     w->maze[W][H][D] = START;
     w->start = position(W, H, D);
   } else {
-    std::uniform_int_distribution<unsigned int> iDist(0, (w->height - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> iDist(1, (w->height - 1) / 2);//idx distribution
     std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
     unsigned int H = (iDist(engine) * 2) - 1;
     unsigned int W;
@@ -167,7 +167,7 @@ void AI::generate(){
   //select end position
   //0 selects side walls
   if(sDist(engine) == 0){
-    std::uniform_int_distribution<unsigned int> iDist(0, (w->width - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> iDist(1, (w->width - 1) / 2);//idx distribution
     std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
     unsigned int W = (iDist(engine) * 2) - 1;
     unsigned int H;
@@ -180,7 +180,7 @@ void AI::generate(){
     w->maze[W][H][D] = END;
     w->end = position(W, H, D);
   } else {
-    std::uniform_int_distribution<unsigned int> iDist(0, (w->height - 1) / 2);//idx distribution
+    std::uniform_int_distribution<unsigned int> iDist(1, (w->height - 1) / 2);//idx distribution
     std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
     unsigned int H = (iDist(engine) * 2) - 1;
     unsigned int W;
@@ -240,5 +240,4 @@ void AI::generate(){
       w->maze[x1][y1][z2] = STAIR;
     }
   }
-  w->print();
 }

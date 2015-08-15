@@ -2,7 +2,6 @@
 #define __AI_H__
 
 #include<vector>
-#include<cmath>
 #include<algorithm>
 #include"stuff.hh"
 #include"world.hh"
@@ -26,12 +25,6 @@ private:
     
     bool operator()(const Node& x, const Node& y){
       return heur(x) > heur(y);
-    }
-    
-    double distance(position x, position y){
-      return sqrt(((std::get<0>(x) - std::get<0>(y)) * (std::get<0>(x) - std::get<0>(y))) +
-                  ((std::get<1>(x) - std::get<1>(y)) * (std::get<1>(x) - std::get<1>(y))) +
-                  ((std::get<2>(x) - std::get<2>(y)) * (std::get<2>(x) - std::get<2>(y))));
     }
   };
   

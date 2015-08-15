@@ -20,10 +20,13 @@ int main(int argc, char** argv){
   //world w(mazeStr);
   world w(11, 11, 2);
   AI ai(&w);
-  w.print();
   ai.generate();
+  w.print();
   
   std::vector<Node> results = ai();
+  std::cout << distance(w.start, w.end) << std::endl;
+  double diff = (double)results.size() / distance(w.start, w.end);
+  std::cout << "difficulty\t" << diff << std::endl;
   
   for(auto itr = results.begin(); itr != results.end(); ++itr){
     std::cout << (*itr).size() << std::endl;

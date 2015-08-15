@@ -11,4 +11,6 @@ typedef unsigned int coord;
 typedef std::tuple<coord, coord, coord> position;
 typedef std::vector<position> Node;
 
+double distance(position x, position y);
+
 #endif
