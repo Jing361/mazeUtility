@@ -17,12 +17,12 @@ int main(int argc, char** argv){
   while(std::getline(maze, line)){
     mazeStr += line + '\n';
   }
-  std::cout << mazeStr << std::endl;
   world w(mazeStr);
   //world w(101, 101, 1);
   AI ai(&w);
+  w.print();
   ai.generate();
-  /*
+  
   std::vector<Node> results = ai();
   
   for(auto itr = results.begin(); itr != results.end(); ++itr){
@@ -37,19 +37,19 @@ int main(int argc, char** argv){
       unsigned int val = std::get<0>(*it) - lastX;
       switch(val){
       case -1:
-        std::cout << " \tleft";
+        std::cout << " \tup";
       break;
       case  1:
-        std::cout << " \tright";
+        std::cout << " \tdown";
       break;
       };
       val = std::get<1>(*it) - lastY;
       switch(val){
       case -1:
-        std::cout << " \tup";
+        std::cout << " \tleft";
       break;
       case  1:
-        std::cout << " \tdown";
+        std::cout << " \tright";
       break;
       };
       val = std::get<2>(*it) - lastZ;
@@ -68,6 +68,6 @@ int main(int argc, char** argv){
       lastZ = std::get<2>(*it);
     }
     std::cout << std::endl;
-  }*/
+  }
   return 0;
 }
