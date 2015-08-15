@@ -113,6 +113,10 @@ void AI::generate(){
   
   w->clear();
   
+  while(w->start == w->end){
+    w->placeEnds();
+  }
+  
   position temp = w->start;
   //push seed into maze
   if(std::get<0>(temp) == 0){
@@ -163,6 +167,8 @@ void AI::generate(){
       w->maze[x1][y1][z2] = STAIR;
     }
   }
-  //put start back.  it will get deleted.
+  //put start back.  it will have been deleted.
+  //  also put end back.  it sometimes gets deleted
   w->maze[std::get<0>(w->start)][std::get<1>(w->start)][std::get<2>(w->start)] = START;
+  w->maze[std::get<0>(w->end)][std::get<1>(w->end)][std::get<2>(w->end)] = END;
 }

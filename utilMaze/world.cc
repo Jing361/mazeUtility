@@ -151,11 +151,7 @@ void world::clear(){
     }
   }
   
-  //select start position
-  place(START, start);
-  
-  //select end position
-  place(END, end);
+  placeEnds();
 }
 
 void world::place(space sp, position& pos){
@@ -192,4 +188,12 @@ void world::place(space sp, position& pos){
     maze[W][H][D] = sp;
     pos = position(W, H, D);
   }
+}
+
+void world::placeEnds(){
+  //select start position
+  place(START, start);
+  
+  //select end position
+  place(END, end);
 }

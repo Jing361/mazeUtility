@@ -15,6 +15,7 @@ public:
   
   void print();
   void clear();
+  void placeEnds();
   
   space*** maze;
   unsigned int width;
