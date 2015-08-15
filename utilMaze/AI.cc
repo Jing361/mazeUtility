@@ -3,6 +3,8 @@
 #include<chrono>
 #include"AI.hh"
 
+#include<iostream>
+
 std::vector<Node> AI::expandSearch(Node node){
   std::vector<Node> ret;
   coord x = std::get<0>(node.back());
@@ -106,94 +108,11 @@ std::vector<Node> AI::operator()(){
 void AI::generate(){
   std::mt19937::result_type seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
   std::mt19937 engine(seed);
-  std::uniform_int_distribution<unsigned int> sDist(0, 1);//start distribution
   std::vector<std::pair<position, position>> frontier;
   std::vector<position> explored;
   
-  //initialize world
-  for(unsigned int i = 0; i < w->depth; ++i){
-    //perimeter walls
-    for(unsigned int j = 0; j < w->width; ++j){
-      w->maze[j][0][i] = WALL;
-      w->maze[j][w->height - 1][i] = WALL;
-    }
-    for(unsigned int j = 0; j < w->height; ++j){
-      w->maze[0][j][i] = WALL;
-      w->maze[w->width - 1][j][i] = WALL;
-    }
-    
-    //insert alternating wall and open space
-    for(unsigned int j = 1; j < w->width - 1; ++j){
-      for(unsigned int k = 1; k < w->height - 1; ++k){
-        if(j % 2 == 0 || k % 2 == 0){
-          w->maze[j][k][i] = WALL;
-        } else {
-          w->maze[j][k][i] = EMPTY;
-        }
-      }
-    }
-  }
+  w->clear();
   
-  //select start position
-  //0 selects side walls
-  if(sDist(engine) == 0){
-    std::uniform_int_distribution<unsigned int> iDist(1, (w->width - 1) / 2);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
-    unsigned int W = (iDist(engine) * 2) - 1;
-    unsigned int H;
-    unsigned int D = deepDist(engine);
-    if(sDist(engine) == 0){
-      H = 0;
-    } else {
-      H = w->height - 1;
-    }
-    w->maze[W][H][D] = START;
-    w->start = position(W, H, D);
-  } else {
-    std::uniform_int_distribution<unsigned int> iDist(1, (w->height - 1) / 2);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
-    unsigned int H = (iDist(engine) * 2) - 1;
-    unsigned int W;
-    unsigned int D = deepDist(engine);
-    if(sDist(engine) == 0){
-      W = 0;
-    } else {
-      W = w->width - 1;
-    }
-    w->maze[W][H][D] = START;
-    w->start = position(W, H, D);
-  }
-  
-  //select end position
-  //0 selects side walls
-  if(sDist(engine) == 0){
-    std::uniform_int_distribution<unsigned int> iDist(1, (w->width - 1) / 2);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
-    unsigned int W = (iDist(engine) * 2) - 1;
-    unsigned int H;
-    unsigned int D = deepDist(engine);
-    if(sDist(engine) == 0){
-      H = 0;
-    } else {
-      H = w->height - 1;
-    }
-    w->maze[W][H][D] = END;
-    w->end = position(W, H, D);
-  } else {
-    std::uniform_int_distribution<unsigned int> iDist(1, (w->height - 1) / 2);//idx distribution
-    std::uniform_int_distribution<unsigned int> deepDist(0, w->depth - 1);//depth distribution
-    unsigned int H = (iDist(engine) * 2) - 1;
-    unsigned int W;
-    unsigned int D = deepDist(engine);
-    if(sDist(engine) == 0){
-      W = 0;
-    } else {
-      W = w->width - 1;
-    }
-    w->maze[W][H][D] = END;
-    w->end = position(W, H, D);
-  }
-
   position temp = w->start;
   //push seed into maze
   if(std::get<0>(temp) == 0){
@@ -207,32 +126,36 @@ void AI::generate(){
     std::get<1>(temp) = w->height - 2;
   }
 
-  frontier.push_back(std::pair<position, position>(temp, temp));
+  frontier.push_back(std::pair<position, position>(w->start, temp));
   while(!frontier.empty()){
     std::uniform_int_distribution<unsigned int> dDist(0, frontier.size() - 1);
     unsigned int idx = dDist(engine);
     std::pair<position, position> thisNode = frontier[idx];
-    frontier.erase(frontier.begin() + idx);
-    
-    if(std::find(explored.begin(), explored.end(), thisNode.second) != explored.end()){
-      continue;
-    }
-    std::vector<position> nodes = expandGenerate(thisNode.second);
-    for(auto it = nodes.begin(); it != nodes.end(); ++it){
-      if(std::find(explored.begin(), explored.end(), *it) != explored.end()){
-        continue;
-      }
-      frontier.push_back(std::pair<position, position>(thisNode.second, *it));
-    }
-    explored.push_back(thisNode.second);
-    
-    //remove wall
     coord x1 = std::get<0>(thisNode.first);
     coord x2 = std::get<0>(thisNode.second);
     coord y1 = std::get<1>(thisNode.first);
     coord y2 = std::get<1>(thisNode.second);
     coord z1 = std::get<2>(thisNode.first);
     coord z2 = std::get<2>(thisNode.second);
+    
+    frontier.erase(frontier.begin() + idx);
+    
+    if(std::find(explored.begin(), explored.end(), thisNode.second) != explored.end()){
+      continue;
+    }
+    if(x1 == x2 && y1 == y2 && z1 == z2){
+      continue;
+    }
+    std::vector<position> nodes = expandGenerate(thisNode.second);
+    for(auto it = nodes.begin(); it != nodes.end(); ++it){
+      //if new node is not already explored, add it to be explored
+      if(std::find(explored.begin(), explored.end(), *it) == explored.end()){
+        frontier.push_back(std::pair<position, position>(thisNode.second, *it));
+      }
+    }
+    explored.push_back(thisNode.second);
+
+    //remove wall
     w->maze[(x1 + x2) / 2][y1][z1] = EMPTY;
     w->maze[x1][(y1 + y2) / 2][z1] = EMPTY;
     if(z1 != z2){
@@ -240,4 +163,6 @@ void AI::generate(){
       w->maze[x1][y1][z2] = STAIR;
     }
   }
+  //put start back.  it will get deleted.
+  w->maze[std::get<0>(w->start)][std::get<1>(w->start)][std::get<2>(w->start)] = START;
 }
