@@ -15,6 +15,8 @@ GLfloat xoffset;
 GLfloat yoffset;
 float lastX;
 float lastY;
+float maxFov = 100;
+float fov = 80;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode){
   (void)scancode;//UNUSED
@@ -31,18 +33,30 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   }
 }
 
-bool firstMouse = true;
+//bool firstMouse = true;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos){
-  if (firstMouse){
+  (void)window;//UNUSED
+/*  if (firstMouse){
     lastX = xpos;
     lastY = ypos;
     firstMouse = false;
-  }
-  (void)window;//UNUSED
+  }*/
   xoffset = xpos - lastX;
   yoffset = lastY - ypos;
   lastX = xpos;
   lastY = ypos;
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
+  if(fov >= 1.0f && fov <= maxFov){
+  	fov -= yoffset;
+  }
+  if(fov <= 1.0f){
+  	fov = 1.0f;
+  }
+  if(fov >= maxFov){
+  	fov = maxFov;
+  }
 }
 
 void moveCam(camera& cam, const float dTime){
@@ -206,6 +220,7 @@ int main(){
   
   glfwSetKeyCallback(window, key_callback);
   glfwSetCursorPosCallback(window, mouse_callback);
+  glfwSetScrollCallback(window, scroll_callback);
   
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glEnable(GL_DEPTH_TEST);
@@ -217,7 +232,7 @@ int main(){
   glm::mat4 projection;
   
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-  projection = glm::perspective(glm::radians(45.0f), (float)screenWidth/screenHeight, 0.1f, 100.0f);
+  projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
   tri.rotate(-55, 1.0, 0.0, 0.0);
   while(!glfwWindowShouldClose(window)){
     //GLfloat timeValue = glfwGetTime();
@@ -229,6 +244,7 @@ int main(){
     
     moveCam(cam, dTime);
     view = cam.getMatrix();
+    projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
     
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
