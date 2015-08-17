@@ -8,7 +8,6 @@ camera::camera(glm::vec3 position, glm::vec3 front, glm::vec3 up, float speed):
   m_right(glm::normalize(glm::cross(m_front, m_worldUp))),
   m_up(glm::normalize(glm::cross(m_right, m_front))),
   m_speed(speed){
-  update();
 }
 
 glm::mat4 camera::getMatrix(){
@@ -30,7 +29,27 @@ void camera::tick(direction dir, float dTime){
   }
 }
 
-void camera::update(){
-//  glm::vec3  front;
-//  front.x = cos(glm::radians())
+void camera::look(float yaw, float pitch, float roll){
+  
+}
+
+void camera::look(float xoffset, float yoffset){
+  xoffset *= m_sensitivity;
+  yoffset *= m_sensitivity;
+  
+  m_yaw += xoffset;
+  m_pitch += yoffset;
+  
+  if(m_pitch > 89.0f){
+    m_pitch = 89.0f;
+  }
+  if(m_pitch < -89.0f){
+    m_pitch = -89.0f;
+  }
+
+  glm::vec3 front;
+  front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+  front.y = sin(glm::radians(m_pitch));
+  front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+  m_front = glm::normalize(front);
 }

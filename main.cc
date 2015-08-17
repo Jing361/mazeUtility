@@ -11,6 +11,10 @@
 #include"camera.hh"
 
 bool keys[1024];
+GLfloat xoffset;
+GLfloat yoffset;
+float lastX;
+float lastY;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode){
   (void)scancode;//UNUSED
@@ -27,7 +31,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   }
 }
 
-void moveCam(camera& cam, float dTime){
+bool firstMouse = true;
+void mouse_callback(GLFWwindow* window, double xpos, double ypos){
+  if (firstMouse){
+    lastX = xpos;
+    lastY = ypos;
+    firstMouse = false;
+  }
+  (void)window;//UNUSED
+  xoffset = xpos - lastX;
+  yoffset = lastY - ypos;
+  lastX = xpos;
+  lastY = ypos;
+}
+
+void moveCam(camera& cam, const float dTime){
   if(keys[GLFW_KEY_W]){
     cam.tick(camera::FORWARD, dTime);
   }
@@ -40,6 +58,7 @@ void moveCam(camera& cam, float dTime){
   if(keys[GLFW_KEY_D]){
     cam.tick(camera::RIGHT, dTime);
   }
+  cam.look(xoffset, yoffset);
 }
 
 int main(){
@@ -183,7 +202,10 @@ int main(){
             textures.begin(), textures.end());
   camera cam(glm::vec3(0.0, 0.0, 3.0));
 
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  
   glfwSetKeyCallback(window, key_callback);
+  glfwSetCursorPosCallback(window, mouse_callback);
   
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glEnable(GL_DEPTH_TEST);
