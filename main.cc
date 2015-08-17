@@ -2,17 +2,54 @@
 #include<glfw3.h>
 #include<iostream>
 #include<cmath>
+#include<functional>
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 #include"shader.hh"
 #include"model.hh"
+#include"camera.hh"
+
+bool keys[1024];
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode){
+  (void)scancode;//UNUSED
+  (void)mode;//UNUSED
+  if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+    glfwSetWindowShouldClose(window, GL_TRUE);
+  }
+  if (key >= 0 && key < 1024){
+    if(action == GLFW_PRESS){
+      keys[key] = true;
+    }else if(action == GLFW_RELEASE){
+      keys[key] = false;
+    }
+  }
+}
+
+void moveCam(camera& cam, float dTime){
+  if(keys[GLFW_KEY_W]){
+    cam.tick(camera::FORWARD, dTime);
+  }
+  if(keys[GLFW_KEY_S]){
+    cam.tick(camera::BACKWARD, dTime);
+  }
+  if(keys[GLFW_KEY_A]){
+    cam.tick(camera::LEFT, dTime);
+  }
+  if(keys[GLFW_KEY_D]){
+    cam.tick(camera::RIGHT, dTime);
+  }
+}
 
 int main(){
   unsigned int glMajor = 3;
   unsigned int glminor = 3;
   unsigned int screenWidth = 800;
   unsigned int screenHeight = 600;
+  GLfloat curFrame = glfwGetTime();
+  GLfloat lastFrame = glfwGetTime();
+  GLfloat dTime = curFrame - lastFrame;
   glfwInit();
   
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
@@ -144,24 +181,9 @@ int main(){
             //indices, indices+(sizeof(indices) / sizeof(GLuint)),
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
             textures.begin(), textures.end());
+  camera cam(glm::vec3(0.0, 0.0, 3.0));
 
-  //glfwSetKeyCallback(window, key_callback);
-  glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mode){
-    (void)scancode;//UNUSED
-    (void)mode;//UNUSED
-    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-      glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-    GLfloat cameraSpeed = 0.05f;
-    if(key == GLFW_KEY_W)
-        cameraPos += cameraSpeed * cameraFront;
-    if(key == GLFW_KEY_S)
-        cameraPos -= cameraSpeed * cameraFront;
-    if(key == GLFW_KEY_A)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if(key == GLFW_KEY_D)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-  });  
+  glfwSetKeyCallback(window, key_callback);
   
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glEnable(GL_DEPTH_TEST);
@@ -169,25 +191,22 @@ int main(){
   //Wireframe mode
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glm::mat4 view;
-  view = glm::lookAt(glm::vec3(0.0, 0.0, 3.0),
-                     glm::vec3(0.0, 0.0, 0.0),
-                     glm::vec3(0.0, 1.0, 0.0));
+  view = cam.getMatrix();
   glm::mat4 projection;
   
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   projection = glm::perspective(glm::radians(45.0f), (float)screenWidth/screenHeight, 0.1f, 100.0f);
   tri.rotate(-55, 1.0, 0.0, 0.0);
   while(!glfwWindowShouldClose(window)){
     //GLfloat timeValue = glfwGetTime();
     //GLfloat greenValue = (sin(timeValue) / 2) + 0.5f;
     //GLint vertexColorLocation = glGetUniformLocation(program.getTarget(), "ourColor");
+    curFrame = glfwGetTime();
+    dTime = curFrame - lastFrame;
+    lastFrame = curFrame;
     
-    GLfloat radius = 10.0f;
-    GLfloat camX = sin(glfwGetTime()) * radius;
-    GLfloat camZ = cos(glfwGetTime()) * radius;
-    view = glm::lookAt(glm::vec3(camX, 0.0, camZ),
-                       glm::vec3(0.0, 0.0, 0.0),
-                       glm::vec3(0.0, 1.0, 0.0));
+    moveCam(cam, dTime);
+    view = cam.getMatrix();
     
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
