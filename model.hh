@@ -23,7 +23,8 @@ public:
   template<typename vertItr,
   typename idxItr = std::vector<GLfloat>::iterator,
   typename texItr = std::vector<std::string>::iterator>
-  model(vertItr firstVert, vertItr lastVert, bool hasColor = false,
+  model(vertItr firstVert, vertItr lastVert,
+        bool hasColor = false, bool hasNormal = false,
         idxItr firstIdx = idxItr(), idxItr lastIdx = idxItr(),
         texItr firstTex = texItr(), texItr lastTex = texItr());
   ~model();

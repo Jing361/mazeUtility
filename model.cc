@@ -7,7 +7,8 @@
 template<typename vertItr,
 typename idxItr,
 typename texItr>
-model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
+model::model(vertItr firstVert, vertItr lastVert,
+             bool hasColor, bool hasNormal,
              idxItr firstIdx, idxItr lastIdx,
              texItr firstTex, texItr lastTex):
   m_vertices(firstVert, lastVert),
@@ -16,6 +17,9 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   unsigned int attr = 0;
   unsigned int offset = 0;
   if(hasColor){
+    stride += 3;
+  }
+  if(hasNormal){
     stride += 3;
   }
   if(firstTex != lastTex){
@@ -40,27 +44,44 @@ model::model(vertItr firstVert, vertItr lastVert, bool hasColor,
   }
 
   //position
-  glVertexAttribPointer(attr, 3, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)offset);
-  glEnableVertexAttribArray(attr);
-  offset += 3;
-  ++attr;
-  //color
-  if(hasColor){
-    glVertexAttribPointer(attr, 3, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
+  {
+    unsigned int nData = 3;
+    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)offset);
     glEnableVertexAttribArray(attr);
-    offset += 3;
+    offset += nData;
   }
   ++attr;
   
-  if(firstTex != lastTex){
-    glVertexAttribPointer(attr, 2, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
+  //color
+  if(hasColor){
+    unsigned int nData = 3;
+    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
-    offset += 2;
+    offset += nData;
+  }
+  ++attr;
+  
+  //texture coodinates
+  if(firstTex != lastTex){
+    unsigned int nData = 2;
+    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
+    glEnableVertexAttribArray(attr);
+    offset += nData;
+  }
+  ++attr;
+  
+  //normal vector
+  if(hasNormal){
+    unsigned int nData = 3;
+    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
+    glEnableVertexAttribArray(attr);
+    offset += nData;
   }
   
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
   
+  //setup textures
   for(auto it = firstTex; it != lastTex; ++it){
     int width, height;
     unsigned char* image;
@@ -95,6 +116,7 @@ model::~model(){
 }
 
 void model::render(GLuint prog){
+  //Put textures in memory
   unsigned int i = 0;
   std::string name = "ourTexture";
   for(auto it = m_textures.begin(); it != m_textures.end(); ++it){
@@ -105,6 +127,7 @@ void model::render(GLuint prog){
     glUniform1i(glGetUniformLocation(prog, (name + ss.str()).c_str()), i);
     ++i;
   }
+  //put transform matrix in memory
   GLuint transformLoc = glGetUniformLocation(prog, "transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
   
