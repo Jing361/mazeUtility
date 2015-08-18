@@ -55,7 +55,7 @@ void shader::attach(GLuint shade, const GLchar* path){
   if(!success){
     GLchar infoLog[512];
     glGetShaderInfoLog(shade, 512, NULL, infoLog);
-    std::cerr << "ERROR:SHADER:COMPILATION_FAILED\n" << infoLog << std::endl;
+    std::cerr << "ERROR:SHADER:" << path << ":COMPILATION_FAILED\n" << infoLog << std::endl;
   }
   
   glAttachShader(m_program, shade);
