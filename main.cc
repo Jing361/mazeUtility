@@ -210,7 +210,8 @@ int main(){
   std::vector<std::string> textures;
   textures.push_back(std::string("container.jpg"));
   textures.push_back(std::string("awesomeface.png"));
-  model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)), false,
+  model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
+            false, false,
             //indices, indices+(sizeof(indices) / sizeof(GLuint)),
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
             textures.begin(), textures.end());
@@ -243,6 +244,10 @@ int main(){
     lastFrame = curFrame;
     
     moveCam(cam, dTime);
+    //stifle remnant offsets.
+    //  offset doesn't get set to 0 when there is no mouse movement.
+    xoffset /= 2;
+    yoffset /= 2;
     view = cam.getMatrix();
     projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
     
