@@ -156,8 +156,8 @@ int main(){
     0, 4, 6,
     0, 2, 6
   };*/
-  //cube
-  GLfloat vertices[] = {
+  //textured cube
+  /*GLfloat vertices[] = {
     //bottom
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -205,13 +205,57 @@ int main(){
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+  };*/
+  //normalled cube
+  GLfloat vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
   };
   
   std::vector<std::string> textures;
-  textures.push_back(std::string("container.jpg"));
-  textures.push_back(std::string("awesomeface.png"));
+  //textures.push_back(std::string("container.jpg"));
+  //textures.push_back(std::string("awesomeface.png"));
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
-            false, false,
+            false, true,
             //indices, indices+(sizeof(indices) / sizeof(GLuint)),
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
             textures.begin(), textures.end());
