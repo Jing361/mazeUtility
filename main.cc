@@ -260,6 +260,11 @@ int main(){
             //indices, indices+(sizeof(indices) / sizeof(GLuint)),
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
             textures.begin(), textures.end());
+  model camBox(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
+               false, true,
+               //indices, indices+(sizeof(indices) / sizeof(GLuint)),
+               std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
+               textures.begin(), textures.end());
   camera cam(glm::vec3(0.0, 0.0, 3.0));
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -281,6 +286,7 @@ int main(){
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   tri.rotate(-55, 1.0, 0.0, 0.0);
   light lite(glm::vec3(0.0, 3.0, 0.0), glm::vec3(1.0, 1.0, 1.0));
+  camBox.translate(0.0, 3.0, 0.0);
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -304,6 +310,7 @@ int main(){
     projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
     
     tri.render(program.getTarget());
+    camBox.render(program.getTarget());
     
     GLint viewLoc = glGetUniformLocation(program.getTarget(), "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));

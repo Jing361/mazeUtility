@@ -35,7 +35,6 @@ void main(){
   vec3 reflectDir = reflect(-lightDir, norm);
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
   vec3 specular = specularStrength * spec * lightColor;
-  //specular = vec3(0.0, 0.0, 0.0);
   
   vec3 result = (ambient + diffuse + specular) * objColor;
   color = vec4(result, 1.0f);
