@@ -53,3 +53,7 @@ void camera::look(float xoffset, float yoffset){
   front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
   m_front = glm::normalize(front);
 }
+
+glm::vec3 camera::getPosition(){
+  return m_position;
+}

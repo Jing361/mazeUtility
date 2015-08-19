@@ -31,6 +31,7 @@ public:
   void tick(direction dir, float dTime);
   void look(float yaw, float pitch, float roll);
   void look(float xoffset, float yoffset);
+  glm::vec3 getPosition();
 };
 
 #endif

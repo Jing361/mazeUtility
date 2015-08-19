@@ -280,7 +280,7 @@ int main(){
   
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   tri.rotate(-55, 1.0, 0.0, 0.0);
-  light lite(glm::vec3(2.0, 2.0, 2.0), glm::vec3(1.0, 1.0, 1.0));
+  light lite(glm::vec3(0.0, 3.0, 0.0), glm::vec3(1.0, 1.0, 1.0));
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -309,6 +309,8 @@ int main(){
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     GLint projLoc = glGetUniformLocation(program.getTarget(), "projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    GLint viewPosLoc = glGetUniformLocation(program.getTarget(), "viewPos");
+    glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     
     lite.getUniforms(program.getTarget());
     
