@@ -9,6 +9,7 @@
 #include"shader.hh"
 #include"model.hh"
 #include"camera.hh"
+#include"light.hh"
 
 bool keys[1024];
 GLfloat xoffset;
@@ -279,8 +280,7 @@ int main(){
   
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   tri.rotate(-55, 1.0, 0.0, 0.0);
-  glm::vec3 lightPos(2.0, 2.0, 2.0);
-  glm::vec3 lightColor(0.0, 1.0, 0.0);
+  light lite(glm::vec3(2.0, 2.0, 2.0), glm::vec3(1.0, 0.0, 1.0));
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -292,8 +292,8 @@ int main(){
     
     GLfloat greenValue = (sin(curFrame) / 2) + 0.5f;
     GLint objColorLoc = glGetUniformLocation(program.getTarget(), "objColor");
-    //glUniform4f(objColorLoc, 0.0f, greenValue, 0.0f, 1.0f);
-    glUniform3f(objColorLoc, 1.0f, 0.0, 0.0f);
+    //glUniform3f(objColorLoc, 0.0f, greenValue, 0.0f);
+    glUniform3f(objColorLoc, 1.0f, 1.0, 1.0f);
     
     moveCam(cam, dTime);
     //stifle remnant offsets.
@@ -310,10 +310,7 @@ int main(){
     GLint projLoc = glGetUniformLocation(program.getTarget(), "projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
-    GLint lightPosLoc = glGetUniformLocation(program.getTarget(), "lightPos");
-    glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
-    GLint lightColorLoc = glGetUniformLocation(program.getTarget(), "lightColor");
-    glUniform3f(lightColorLoc, lightColor.x, lightColor.y, lightColor.z);
+    lite.getUniforms(program.getTarget());
     
     glfwSwapBuffers(window);
   }

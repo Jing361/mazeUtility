@@ -14,8 +14,8 @@ name:=main
 
 default:$(name).exe
 
-$(name).exe:$(name).o shader.o camera.o
-	$(CC) $(name).o shader.o camera.o -o $(name).exe $(lflags) $(libs)
+$(name).exe:$(name).o shader.o camera.o light.o
+	$(CC) $(name).o shader.o camera.o light.o -o $(name).exe $(lflags) $(libs)
 
 $(name).o:$(name).cc model.cc
 	$(CC) $(cflags) $(name).cc
@@ -25,6 +25,9 @@ shader.o:shader.cc
   
 camera.o:camera.cc
 	$(CC) $(cflags) camera.cc
-  
+
+light.o:light.cc
+	$(CC) $(cflags) light.cc
+
 clean:
-	rm $(name).o shader.o model.o camera.o core $(name).exe
+	rm $(name).o shader.o model.o camera.o light.o core $(name).exe
