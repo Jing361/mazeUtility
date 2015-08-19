@@ -256,7 +256,7 @@ int main(){
   //textures.push_back(std::string("container.jpg"));
   //textures.push_back(std::string("awesomeface.png"));
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
-            false, false,
+            false, true,
             //indices, indices+(sizeof(indices) / sizeof(GLuint)),
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
             textures.begin(), textures.end());
@@ -280,7 +280,7 @@ int main(){
   
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   tri.rotate(-55, 1.0, 0.0, 0.0);
-  light lite(glm::vec3(2.0, 2.0, 2.0), glm::vec3(1.0, 0.0, 1.0));
+  light lite(glm::vec3(2.0, 2.0, 2.0), glm::vec3(1.0, 1.0, 1.0));
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -292,14 +292,14 @@ int main(){
     
     GLfloat greenValue = (sin(curFrame) / 2) + 0.5f;
     GLint objColorLoc = glGetUniformLocation(program.getTarget(), "objColor");
-    //glUniform3f(objColorLoc, 0.0f, greenValue, 0.0f);
-    glUniform3f(objColorLoc, 1.0f, 1.0, 1.0f);
+    glUniform3f(objColorLoc, 0.0f, greenValue, 0.0f);
+    //glUniform3f(objColorLoc, 1.0f, 1.0, 1.0f);
     
     moveCam(cam, dTime);
     //stifle remnant offsets.
     //  offset doesn't get set to 0 when there is no mouse movement.
-    xoffset /= 2;
-    yoffset /= 2;
+    xoffset /= 5;
+    yoffset /= 5;
     view = cam.getMatrix();
     projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
     
