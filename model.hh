@@ -6,6 +6,13 @@
 #include<vector>
 #include<string>
 
+struct Material{
+  glm::vec3 ambient;
+  glm::vec3 diffuse;
+  glm::vec3 specular;
+  float shininess;
+};
+
 class model{
 private:
   std::vector<GLfloat> m_vertices;
@@ -17,6 +24,7 @@ private:
   unsigned int m_nVert;
   
   glm::mat4 m_transform;
+  Material m_mat;
   
 public:
 //somehow handle additional attributes like color
@@ -30,6 +38,7 @@ public:
   ~model();
   
   void render(GLuint prog);
+  Material& getMaterial();
   void translate(double x, double y, double z);
   void rotate(float r, double x, double y, double z);
   void scale(double x, double y, double z);

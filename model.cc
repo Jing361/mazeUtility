@@ -131,6 +131,16 @@ void model::render(GLuint prog){
   GLuint transformLoc = glGetUniformLocation(prog, "transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
   
+  GLint matAmbientLoc  = glGetUniformLocation(prog, "material.ambient");
+  GLint matDiffuseLoc  = glGetUniformLocation(prog, "material.diffuse");
+  GLint matSpecularLoc = glGetUniformLocation(prog, "material.specular");
+  GLint matShineLoc    = glGetUniformLocation(prog, "material.shininess"); 
+  
+  glUniform3f(matAmbientLoc,  m_mat.ambient.r, m_mat.ambient.g, m_mat.ambient.b);
+  glUniform3f(matDiffuseLoc,  m_mat.diffuse.r, m_mat.diffuse.g, m_mat.diffuse.b);
+  glUniform3f(matSpecularLoc, m_mat.specular.r, m_mat.specular.g, m_mat.specular.b);
+  glUniform1f(matShineLoc,    m_mat.shininess);
+  
   glBindVertexArray(m_VAO);
   if(m_indices.size() > 0){
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
@@ -138,6 +148,11 @@ void model::render(GLuint prog){
     glDrawArrays(GL_TRIANGLES, 0, m_nVert);
   }
   glBindVertexArray(0);
+  
+}
+
+Material& model::getMaterial(){
+  return m_mat;
 }
 
 void model::translate(double x, double y, double z){

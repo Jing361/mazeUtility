@@ -25,7 +25,7 @@ public:
     LEFT,
     RIGHT
   };
-  camera(glm::vec3 position, glm::vec3 front = glm::vec3(0.0, 0.0, -1.0), glm::vec3 up = glm::vec3(0.0, 1.0, 0.0), float speed = 0.5f);
+  camera(glm::vec3 position, glm::vec3 front = glm::vec3(0.0, 0.0, -1.0), glm::vec3 up = glm::vec3(0.0, 1.0, 0.0), float speed = 0.8f);
 
   glm::mat4 getMatrix();
   void tick(direction dir, float dTime);

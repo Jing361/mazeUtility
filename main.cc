@@ -115,6 +115,12 @@ int main(){
 
   glViewport(0, 0, 800, 600);
   
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  
+  glfwSetKeyCallback(window, key_callback);
+  glfwSetCursorPosCallback(window, mouse_callback);
+  glfwSetScrollCallback(window, scroll_callback);
+  
   shader program("vertex.glsl", "fragment.glsl");
   
   //rectangle
@@ -266,12 +272,18 @@ int main(){
                std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                textures.begin(), textures.end());
   camera cam(glm::vec3(0.0, 0.0, 3.0));
-
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   
-  glfwSetKeyCallback(window, key_callback);
-  glfwSetCursorPosCallback(window, mouse_callback);
-  glfwSetScrollCallback(window, scroll_callback);
+  
+  Material& triMat = tri.getMaterial();
+  triMat.ambient = glm::vec3(1.0f, 0.5f, 0.31f);
+  triMat.diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
+  triMat.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+  triMat.shininess = 32.0f;
+  
+  tri.rotate(-55, 1.0, 0.0, 0.0);
+  
+  camBox.translate(0.0, 3.0, 0.0);
+  camBox.scale(0.3, 0.3, 0.3);
   
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glEnable(GL_DEPTH_TEST);
@@ -284,9 +296,7 @@ int main(){
   projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
   
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-  tri.rotate(-55, 1.0, 0.0, 0.0);
   light lite(glm::vec3(0.0, 3.0, 0.0), glm::vec3(1.0, 1.0, 1.0));
-  camBox.translate(0.0, 3.0, 0.0);
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -296,10 +306,9 @@ int main(){
     dTime = curFrame - lastFrame;
     lastFrame = curFrame;
     
-    GLfloat greenValue = (sin(curFrame) / 2) + 0.5f;
+    /*GLfloat greenValue = (sin(curFrame) / 2) + 0.5f;
     GLint objColorLoc = glGetUniformLocation(program.getTarget(), "objColor");
-    glUniform3f(objColorLoc, 0.0f, greenValue, 0.0f);
-    //glUniform3f(objColorLoc, 1.0f, 1.0, 1.0f);
+    glUniform3f(objColorLoc, 0.0f, greenValue, 0.0f);*/
     
     moveCam(cam, dTime);
     //stifle remnant offsets.
