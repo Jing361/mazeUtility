@@ -296,7 +296,10 @@ int main(){
   projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
   
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-  light lite(glm::vec3(0.0, 3.0, 0.0), glm::vec3(1.0, 1.0, 1.0));
+  light lite(glm::vec3(0.0, 3.0, 0.0),
+             glm::vec3(0.2f, 0.2f, 0.2f),
+             glm::vec3(0.5f, 0.5f, 0.5f),
+             glm::vec3(1.0f, 1.0f, 1.0f));
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -318,9 +321,6 @@ int main(){
     view = cam.getMatrix();
     projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
     
-    tri.render(program.getTarget());
-    camBox.render(program.getTarget());
-    
     GLint viewLoc = glGetUniformLocation(program.getTarget(), "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     GLint projLoc = glGetUniformLocation(program.getTarget(), "projection");
@@ -329,6 +329,8 @@ int main(){
     glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     
     lite.getUniforms(program.getTarget());
+    tri.render(program.getTarget());
+    camBox.render(program.getTarget());
     
     glfwSwapBuffers(window);
   }
