@@ -12,7 +12,11 @@ cflags:=$(iflags) $(wflags) -c -m64
 
 name:=main
 
+mazeTest:=maze
+
 default:$(name).exe
+
+mazeTest:$(mazeTest).exe
 
 $(name).exe:$(name).o shader.o camera.o light.o
 	$(CC) $(name).o shader.o camera.o light.o -o $(name).exe $(lflags) $(libs)
@@ -29,5 +33,20 @@ camera.o:camera.cc
 light.o:light.cc
 	$(CC) $(cflags) light.cc
 
+$(mazeTest).exe:$(mazeTest).o world.o AI.o stuff.o
+	$(CC) $(mazeTest).o world.o AI.o stuff.o -o $(mazeTest).exe
+
+$(mazeTest).o:$(mazeTest).cc
+	$(CC) $(cflags) $(flags) $(mazeTest).cc
+  
+world.o:world.cc
+	$(CC) $(cflags) $(flags) world.cc
+  
+AI.o:AI.cc
+	$(CC) $(cflags) $(flags) AI.cc
+
+stuff.o:stuff.cc
+	$(CC) $(cflags) $(flags) stuff.cc
+  
 clean:
-	rm $(name).o shader.o model.o camera.o light.o core $(name).exe
+	rm $(name).o shader.o model.o camera.o light.o AI.o maze.o world.o stuff.o core $(name).exe $(mazeTest).exe
