@@ -14,25 +14,17 @@ struct Light {
   vec3 specular;
 };
 
-//in vec3 ourColor;
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
 
 out vec4 color;
 
-//uniform sampler2D ourTexture0;
-//uniform sampler2D ourTexture1;
 uniform Material material;
 uniform Light light;
 uniform vec3 viewPos;
 
 void main(){
-  //combine color and texture data
-  //color = texture(ourTexture0, TexCoord) * vec4(ourColor, 1.0f);
-  //combine 2 textures
-	//color = mix(texture(ourTexture0, TexCoord), texture(ourTexture1, TexCoord), 0.2);
-  
   vec3 norm = normalize(Normal);
   vec3 lightDir = normalize(light.position - FragPos);
   vec3 viewDir = normalize(viewPos - FragPos);

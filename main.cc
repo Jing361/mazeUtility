@@ -126,98 +126,6 @@ int main(){
   
   shader program("vertex.glsl", "fragment.glsl");
   
-  //rectangle
-  /*GLfloat vertices[] = {
-    //vertices           //Colors           //Texture coords
-    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
-    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
-   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
-   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
-  };
-  
-  GLuint indices[] = {
-    0, 1, 3,
-    1, 2, 3
-  };*/
-  //cube with fucked texture coordinates
-  /*GLfloat vertices[] = {
-    -0.5f,  0.5f,  0.5f,    0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,    0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,    1.0f, 1.0f,
-     
-    -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,    1.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,    0.0f, 0.0f
-  };
-  
-  GLuint indices[] = {
-    0, 1, 2,
-    1, 2, 3,
-    4, 5, 6,
-    5, 6, 7,
-    0, 4, 5,
-    0, 1, 5,
-    1, 3, 5,
-    3, 5, 7,
-    2, 3, 6,
-    3, 6, 7,
-    0, 4, 6,
-    0, 2, 6
-  };*/
-  //textured cube
-  /*GLfloat vertices[] = {
-    //bottom
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-    //top
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-    //left
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-    //right
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-     //front
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-    //back
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-  };*/
-  //normalled cube
-  /*GLfloat vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
      0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
      0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
@@ -260,7 +168,7 @@ int main(){
     -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
   };*/
-  //Cube, with texture coordinates including spec map
+  //Cube, with texture coordinates
   GLfloat vertices[] = {
     //Positions           //Texture    //Normals
     -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
@@ -308,25 +216,24 @@ int main(){
   
   std::vector<std::string> textures;
   std::vector<std::string> specMaps;
-  //textures.push_back(std::string("container.jpg"));
-  //textures.push_back(std::string("awesomeface.png"));
   textures.push_back(std::string("container2.png"));
   specMaps.push_back(std::string("container2_specular.png"));
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
             false, true,
-            //indices, indices+(sizeof(indices) / sizeof(GLuint)),
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
             textures.begin(), textures.end(),
             specMaps.begin(), specMaps.end());
   model camBox(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
                false, true,
-               //indices, indices+(sizeof(indices) / sizeof(GLuint)),
                std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                textures.begin(), textures.end());
   camera cam(glm::vec3(0.0, 0.0, 3.0));
+  light lite(glm::vec3(0.0, 3.0, 0.0),
+             glm::vec3(0.3f, 0.3f, 0.3f),
+             glm::vec3(0.8f, 0.8f, 0.8f),
+             glm::vec3(1.0f, 1.0f, 1.0f));
   
   tri.getShininess() = 32.0f;
-  
   tri.rotate(-55, 1.0, 0.0, 0.0);
   
   camBox.translate(0.0, 3.0, 0.0);
@@ -336,12 +243,6 @@ int main(){
   glm::mat4 projection;
   view = cam.getMatrix();
   projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
-  
-  //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-  light lite(glm::vec3(0.0, 3.0, 0.0),
-             glm::vec3(0.3f, 0.3f, 0.3f),
-             glm::vec3(0.8f, 0.8f, 0.8f),
-             glm::vec3(1.0f, 1.0f, 1.0f));
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -350,10 +251,6 @@ int main(){
     curFrame = glfwGetTime();
     dTime = curFrame - lastFrame;
     lastFrame = curFrame;
-    
-    /*GLfloat greenValue = (sin(curFrame) / 2) + 0.5f;
-    GLint objColorLoc = glGetUniformLocation(program.getTarget(), "objColor");
-    glUniform3f(objColorLoc, 0.0f, greenValue, 0.0f);*/
     
     moveCam(cam, dTime);
     //stifle remnant offsets.

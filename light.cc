@@ -1,7 +1,5 @@
 #include"light.hh"
 
-#include<iostream>
-
 light::light(glm::vec3 position, glm::vec3 amb, glm::vec3 diff, glm::vec3 spec):
   m_position(position),
   m_ambient(amb),
