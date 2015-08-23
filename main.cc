@@ -37,20 +37,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 //bool firstMouse = true;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos){
   (void)window;//UNUSED
-/*  if (firstMouse){
-    lastX = xpos;
-    lastY = ypos;
-    firstMouse = false;
-  }*/
   xoffset = xpos - lastX;
   yoffset = lastY - ypos;
   lastX = xpos;
   lastY = ypos;
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
+void scroll_callback(GLFWwindow* window, double xchange, double ychange){
+  (void)window;//UNUSED
+  (void)xchange;//UNUSED
   if(fov >= 1.0f && fov <= maxFov){
-  	fov -= yoffset;
+  	fov -= ychange;
   }
   if(fov <= 1.0f){
   	fov = 1.0f;
@@ -120,6 +117,12 @@ int main(){
   glfwSetKeyCallback(window, key_callback);
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwSetScrollCallback(window, scroll_callback);
+  
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glEnable(GL_DEPTH_TEST);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  //Wireframe mode
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   
   shader program("vertex.glsl", "fragment.glsl");
   
@@ -214,7 +217,7 @@ int main(){
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
   };*/
   //normalled cube
-  GLfloat vertices[] = {
+  /*GLfloat vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
      0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
      0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
@@ -256,16 +259,65 @@ int main(){
      0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
     -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+  };*/
+  //Cube, with texture coordinates including spec map
+  GLfloat vertices[] = {
+    //Positions           //Texture    //Normals
+    -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,   1.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,   0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,   0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,   0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,   0.0f,  0.0f, -1.0f,
+
+    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,   0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,   1.0f, 0.0f,   0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,   1.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,   1.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f, 1.0f,   0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,   0.0f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f,   1.0f, 0.0f,  -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,   1.0f, 1.0f,  -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,  -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,  -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,  -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,   1.0f, 0.0f,  -1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,   0.0f, 1.0f,   1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,   0.0f, 1.0f,   1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,   0.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,   1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,   1.0f, 1.0f,   0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,   1.0f, 0.0f,   0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,   1.0f, 0.0f,   0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,   0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,   0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,   0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,   0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,   0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f, 0.0f,   0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,   0.0f,  1.0f,  0.0f,
   };
   
   std::vector<std::string> textures;
+  std::vector<std::string> specMaps;
   //textures.push_back(std::string("container.jpg"));
   //textures.push_back(std::string("awesomeface.png"));
+  textures.push_back(std::string("container2.png"));
+  specMaps.push_back(std::string("container2_specular.png"));
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
             false, true,
             //indices, indices+(sizeof(indices) / sizeof(GLuint)),
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
-            textures.begin(), textures.end());
+            textures.begin(), textures.end(),
+            specMaps.begin(), specMaps.end());
   model camBox(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
                false, true,
                //indices, indices+(sizeof(indices) / sizeof(GLuint)),
@@ -273,23 +325,13 @@ int main(){
                textures.begin(), textures.end());
   camera cam(glm::vec3(0.0, 0.0, 3.0));
   
-  
-  Material& triMat = tri.getMaterial();
-  triMat.ambient = glm::vec3(1.0f, 0.5f, 0.31f);
-  triMat.diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
-  triMat.specular = glm::vec3(0.5f, 0.5f, 0.5f);
-  triMat.shininess = 32.0f;
+  tri.getShininess() = 32.0f;
   
   tri.rotate(-55, 1.0, 0.0, 0.0);
   
   camBox.translate(0.0, 3.0, 0.0);
-  camBox.scale(0.3, 0.3, 0.3);
+  camBox.scale(0.2, 0.2, 0.2);
   
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-  glEnable(GL_DEPTH_TEST);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  //Wireframe mode
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glm::mat4 view;
   glm::mat4 projection;
   view = cam.getMatrix();
@@ -297,8 +339,8 @@ int main(){
   
   //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   light lite(glm::vec3(0.0, 3.0, 0.0),
-             glm::vec3(0.2f, 0.2f, 0.2f),
-             glm::vec3(0.5f, 0.5f, 0.5f),
+             glm::vec3(0.3f, 0.3f, 0.3f),
+             glm::vec3(0.8f, 0.8f, 0.8f),
              glm::vec3(1.0f, 1.0f, 1.0f));
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();

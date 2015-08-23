@@ -1,4 +1,3 @@
-#include<iostream>
 #include<sstream>
 #include"SOIL.h"
 #include<glm/gtc/matrix_transform.hpp>
@@ -6,11 +5,13 @@
 
 template<typename vertItr,
 typename idxItr,
-typename texItr>
+typename texItr,
+typename specItr>
 model::model(vertItr firstVert, vertItr lastVert,
-             bool hasColor, bool hasNormal,
-             idxItr firstIdx, idxItr lastIdx,
-             texItr firstTex, texItr lastTex):
+      bool hasColor, bool hasNormal,
+      idxItr firstIdx, idxItr lastIdx,
+      texItr firstTex, texItr lastTex,
+      specItr firstSpec, specItr lastSpec):
   m_vertices(firstVert, lastVert),
   m_indices(firstIdx, lastIdx){
   unsigned int stride = 3;
@@ -22,7 +23,7 @@ model::model(vertItr firstVert, vertItr lastVert,
   if(hasNormal){
     stride += 3;
   }
-  if(firstTex != lastTex){
+  if(firstTex != lastTex || firstSpec != lastSpec){
     stride += 2;
   }
   m_nVert = m_vertices.size() / stride;
@@ -62,7 +63,7 @@ model::model(vertItr firstVert, vertItr lastVert,
   ++attr;
   
   //texture coodinates
-  if(firstTex != lastTex){
+  if(firstTex != lastTex || firstSpec != lastSpec){
     unsigned int nData = 2;
     glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
@@ -105,6 +106,30 @@ model::model(vertItr firstVert, vertItr lastVert,
     
     m_textures.push_back(tex);
   }
+  //setup specmaps
+  for(auto it = firstSpec; it != lastSpec; ++it){
+    int width, height;
+    unsigned char* image;
+    GLuint tex;
+    
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    image = SOIL_load_image((*it).c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image);
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    m_specMaps.push_back(tex);
+  }
 }
 
 model::~model(){
@@ -118,28 +143,24 @@ model::~model(){
 void model::render(GLuint prog){
   //Put textures in memory
   unsigned int i = 0;
-  std::string name = "ourTexture";
   for(auto it = m_textures.begin(); it != m_textures.end(); ++it){
-    std::stringstream ss;
-    ss << i;
     glActiveTexture(GL_TEXTURE0 + i);
     glBindTexture(GL_TEXTURE_2D, *it);
-    glUniform1i(glGetUniformLocation(prog, (name + ss.str()).c_str()), i);
+    glUniform1i(glGetUniformLocation(prog, "material.diffuse"), i);
+    ++i;
+  }
+  for(auto it = m_specMaps.begin(); it != m_specMaps.end(); ++it){
+    glActiveTexture(GL_TEXTURE0 + i);
+    glBindTexture(GL_TEXTURE_2D, *it);
+    glUniform1i(glGetUniformLocation(prog, "material.specular"), i);
     ++i;
   }
   //put transform matrix in memory
   GLuint transformLoc = glGetUniformLocation(prog, "transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
   
-  GLint matAmbientLoc  = glGetUniformLocation(prog, "material.ambient");
-  GLint matDiffuseLoc  = glGetUniformLocation(prog, "material.diffuse");
-  GLint matSpecularLoc = glGetUniformLocation(prog, "material.specular");
   GLint matShineLoc    = glGetUniformLocation(prog, "material.shininess"); 
-  
-  glUniform3f(matAmbientLoc,  m_mat.ambient.r, m_mat.ambient.g, m_mat.ambient.b);
-  glUniform3f(matDiffuseLoc,  m_mat.diffuse.r, m_mat.diffuse.g, m_mat.diffuse.b);
-  glUniform3f(matSpecularLoc, m_mat.specular.r, m_mat.specular.g, m_mat.specular.b);
-  glUniform1f(matShineLoc,    m_mat.shininess);
+  glUniform1f(matShineLoc,    m_shininess);
   
   glBindVertexArray(m_VAO);
   if(m_indices.size() > 0){
@@ -151,8 +172,8 @@ void model::render(GLuint prog){
   
 }
 
-Material& model::getMaterial(){
-  return m_mat;
+float& model::getShininess(){
+  return m_shininess;
 }
 
 void model::translate(double x, double y, double z){
