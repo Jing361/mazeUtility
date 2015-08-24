@@ -191,6 +191,7 @@ int main(){
                      std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                      textures.begin(), textures.end(),
                      specMaps.begin(), specMaps.end());
+          temp.getShininess() = 64.0f;
           temp.translate(i, k, j);
           models.push_back(temp);
         }
@@ -207,24 +208,17 @@ int main(){
   
   shader program("vertex.glsl", "fragment.glsl");
   
-  model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
-            false, true,
-            std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
-            textures.begin(), textures.end(),
-            specMaps.begin(), specMaps.end());
   model camBox(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
                false, true,
                std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                textures.begin(), textures.end());
   camera cam(glm::vec3(std::get<0>(w.start), std::get<2>(w.start), std::get<1>(w.start)), 8.0);
-  light lite(glm::vec3(0.0, 3.0, 0.0),
+  light lite(glm::vec3(w.width/2, 4.0, w.height/2),
              glm::vec3(0.3f, 0.3f, 0.3f),
              glm::vec3(0.8f, 0.8f, 0.8f),
              glm::vec3(1.0f, 1.0f, 1.0f));
   
-  tri.getShininess() = 64.0f;
-  
-  camBox.translate(0.0, 3.0, 0.0);
+  camBox.translate(w.width/2, 3.0, w.height/2);
   camBox.scale(0.2, 0.2, 0.2);
   
   glm::mat4 view;
@@ -243,8 +237,8 @@ int main(){
     moveCam(cam, dTime);
     //stifle remnant offsets.
     //  offset doesn't get set to 0 when there is no mouse movement.
-    xoffset /= 5;
-    yoffset /= 5;
+    xoffset = 0;
+    yoffset = 0;
     view = cam.getMatrix();
     projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
     
@@ -257,7 +251,6 @@ int main(){
     
     GLuint target = program.getTarget();
     lite.getUniforms(target);
-    tri.render(target);
     camBox.render(target);
     floor.render(target);
     for(auto it = models.begin(); it != models.end(); ++it){
