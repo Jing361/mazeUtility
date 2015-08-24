@@ -178,15 +178,7 @@ int main(){
   textures.push_back(std::string("data/container2.png"));
   specMaps.push_back(std::string("data/container2_specular.png"));
   
-  model floor(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
-              false, true,
-              std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
-              textures.begin(), textures.end(),
-              specMaps.begin(), specMaps.end());
-  floor.translate(6.5, -1, 6.5);
-  floor.scale(13, 1, 13);
-  
-  world w(13, 13, 1);
+  world w(21, 21, 1);
   AI ai(&w);
   ai.generate();
   
@@ -205,6 +197,13 @@ int main(){
       }
     }
   }
+  model floor(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
+              false, true,
+              std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
+              textures.begin(), textures.end(),
+              specMaps.begin(), specMaps.end());
+  floor.translate((w.width - 1) / 2, -1, (w.height - 1) / 2);
+  floor.scale(w.width, 1, w.height);
   
   shader program("vertex.glsl", "fragment.glsl");
   
@@ -217,7 +216,7 @@ int main(){
                false, true,
                std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                textures.begin(), textures.end());
-  camera cam(glm::vec3(0.0, 0.0, 3.0), 1.0);
+  camera cam(glm::vec3(std::get<0>(w.start), std::get<2>(w.start), std::get<1>(w.start)), 8.0);
   light lite(glm::vec3(0.0, 3.0, 0.0),
              glm::vec3(0.3f, 0.3f, 0.3f),
              glm::vec3(0.8f, 0.8f, 0.8f),
