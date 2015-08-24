@@ -3,9 +3,9 @@ inclloc:=include
 libloc:=lib
 objloc:=obj
 
-iglfw:=-I"C:\Program Files\Common Files\MinGW\glfw\include"
-igl3w:=-I"C:\Program Files\Common Files\MinGW\gl3w\include"
-iglm:=-I"C:\Program Files\Common Files\MinGW\glm"
+iglfw:=-I$(inclloc)/glfw/include
+igl3w:=-I$(inclloc)/gl3w/include
+iglm:=-I$(inclloc)/glm
 iself:=-I./$(inclloc)
 iflags:=$(iglfw) $(igl3w) $(iglm) $(iself)
 lflags:=-L./$(libloc) -L.
