@@ -16,18 +16,28 @@ dflags:=-ggdb3
 cflags:=$(iflags) $(wflags) -c -m64
 
 name:=main
-
 mazeTest:=maze
+mazeGame:=game
 
 default:$(name).exe
 
 mazetest:$(mazeTest).exe
+
+mazegame:$(mazeGame).exe
+
+all:default mazetest mazegame
+
+$(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o
+	$(CC) $(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o -o $(mazeGame).exe $(lflags) $(libs)
 
 $(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o
 	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o -o $(name).exe $(lflags) $(libs)
 
 $(objloc)/$(name).o:$(name).cc model.cc
 	$(CC) $(cflags) $(name).cc -o $(objloc)/$(name).o
+
+$(objloc)/$(mazeGame).o:$(mazeGame).cc model.cc
+	$(CC) $(cflags) $(mazeGame).cc -o $(objloc)/$(mazeGame).o
 
 $(objloc)/shader.o:shader.cc
 	$(CC) $(cflags) shader.cc -o $(objloc)/shader.o
@@ -54,4 +64,4 @@ $(objloc)/stuff.o:stuff.cc
 	$(CC) $(cflags) $(flags) stuff.cc -o $(objloc)/stuff.o
 
 clean:
-	rm $(objloc)/* core $(name).exe $(mazeTest).exe
+	rm $(objloc)/* core $(name).exe $(mazeTest).exe $(mazeGame).exe
