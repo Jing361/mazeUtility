@@ -171,8 +171,45 @@ int main(){
     -0.5f,  0.5f,  0.5f,   0.0f, 0.0f,   0.0f,  1.0f,  0.0f,
     -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,   0.0f,  1.0f,  0.0f,
   };
+  GLfloat startCubeVertices[] = {
+    -0.5f,  0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
+     
+    -0.5f,  0.5f, -0.5f,    1.0f, 0.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,    1.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,    1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,    1.0f, 0.0f, 0.0f
+  };
+  GLfloat endCubeVertices[] = {
+    -0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
+     
+    -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f
+  };
+  GLuint colorCubeIndices[] = {
+    0, 1, 2,
+    1, 2, 3,
+    4, 5, 6,
+    5, 6, 7,
+    0, 4, 5,
+    0, 1, 5,
+    1, 3, 5,
+    3, 5, 7,
+    2, 3, 6,
+    3, 6, 7,
+    0, 4, 6,
+    0, 2, 6
+  };
   
   std::vector<model> models;
+  std::vector<model> colorModels;
   std::vector<std::string> textures;
   std::vector<std::string> specMaps;
   textures.push_back(std::string("data/container2.png"));
@@ -182,6 +219,7 @@ int main(){
   AI ai(&w);
   ai.generate();
   
+  std::cout << "loading models.." << std::endl;
   for(unsigned int i = 0; i < w.width; ++i){
     for(unsigned int j = 0; j < w.height; ++j){
       for(unsigned int k = 0; k < w.depth; ++k){
@@ -205,21 +243,41 @@ int main(){
               specMaps.begin(), specMaps.end());
   floor.translate((w.width - 1) / 2, -1, (w.height - 1) / 2);
   floor.scale(w.width, 1, w.height);
+  models.push_back(floor);
   
-  shader program("vertex.glsl", "fragment.glsl");
+  std::cout << "loading end points.." << std::endl;
+  //add start and finish indicators
+  model startCube(startCubeVertices, startCubeVertices+(sizeof(startCubeVertices) / sizeof(GLfloat)),
+                  true, false,
+                  colorCubeIndices, colorCubeIndices+(sizeof(colorCubeIndices)/sizeof(GLfloat)));
+  model endCube(endCubeVertices, endCubeVertices+(sizeof(endCubeVertices) / sizeof(GLfloat)),
+                  true, false,
+                  colorCubeIndices, colorCubeIndices+(sizeof(colorCubeIndices)/sizeof(GLfloat)));
+                  
+  startCube.translate(std::get<0>(w.start), std::get<2>(w.start), std::get<1>(w.start));
+  endCube.translate(std::get<0>(w.end), std::get<2>(w.end), std::get<1>(w.end));
   
+  colorModels.push_back(startCube);
+  colorModels.push_back(endCube);
+  
+  std::cout << "loading shaders.." << std::endl;
+  shader program("gameVertex.glsl", "gameFragment.glsl");
+  shader colorShader("gameColorVertex.glsl", "gameColorFragment.glsl");
+  
+  std::cout << "loading lighting.." << std::endl;
   model camBox(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
                false, true,
                std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                textures.begin(), textures.end());
-  camera cam(glm::vec3(std::get<0>(w.start), std::get<2>(w.start), std::get<1>(w.start)), 8.0);
+  camera cam(glm::vec3(std::get<0>(w.start), std::get<2>(w.start), std::get<1>(w.start)), 6.0);
   light lite(glm::vec3(w.width/2, 4.0, w.height/2),
              glm::vec3(0.3f, 0.3f, 0.3f),
              glm::vec3(0.8f, 0.8f, 0.8f),
              glm::vec3(1.0f, 1.0f, 1.0f));
   
-  camBox.translate(w.width/2, 3.0, w.height/2);
+  camBox.translate(w.width/2, 4.0, w.height/2);
   camBox.scale(0.2, 0.2, 0.2);
+  models.push_back(camBox);
   
   glm::mat4 view;
   glm::mat4 projection;
@@ -228,6 +286,7 @@ int main(){
   while(!glfwWindowShouldClose(window)){
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    GLuint target = program.getTarget();
     program();
     
     curFrame = glfwGetTime();
@@ -242,18 +301,29 @@ int main(){
     view = cam.getMatrix();
     projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
     
-    GLint viewLoc = glGetUniformLocation(program.getTarget(), "view");
+    GLint viewLoc = glGetUniformLocation(target, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    GLint projLoc = glGetUniformLocation(program.getTarget(), "projection");
+    GLint projLoc = glGetUniformLocation(target, "projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    GLint viewPosLoc = glGetUniformLocation(program.getTarget(), "viewPos");
+    GLint viewPosLoc = glGetUniformLocation(target, "viewPos");
     glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     
-    GLuint target = program.getTarget();
     lite.getUniforms(target);
-    camBox.render(target);
-    floor.render(target);
     for(auto it = models.begin(); it != models.end(); ++it){
+      (*it).render(target);
+    }
+    
+    colorShader();
+    target = colorShader.getTarget();
+    
+    viewLoc = glGetUniformLocation(target, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    projLoc = glGetUniformLocation(target, "projection");
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    viewPosLoc = glGetUniformLocation(target, "viewPos");
+    glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
+    
+    for(auto it = colorModels.begin(); it != colorModels.end(); ++it){
       (*it).render(target);
     }
     
