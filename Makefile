@@ -1,11 +1,16 @@
 CC:=g++
+inclloc:=include
+libloc:=lib
+objloc:=obj
+
 iglfw:=-I"C:\Program Files\Common Files\MinGW\glfw\include"
 igl3w:=-I"C:\Program Files\Common Files\MinGW\gl3w\include"
 iglm:=-I"C:\Program Files\Common Files\MinGW\glm"
-iflags:=$(iglfw) $(igl3w) $(iglm)
-lflags:=-L.
+iself:=-I./$(inclloc)
+iflags:=$(iglfw) $(igl3w) $(iglm) $(iself)
+lflags:=-L./$(libloc) -L.
 #libs:=-lopengl32 -lgdi32 -luser32 -lkernel32 -lglfw3# -Wl,--subsystem,windows
-libs:=gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
+libs:=$(libloc)/gl3w.o -lSOIL -lopengl32 -lglfw3 -Wl,-rpath=$(PWD)/$(libloc)# -Wl,--subsystem,windows
 wflags:=-Wall -Wextra -pedantic -std=c++14 -O2
 dflags:=-ggdb3
 cflags:=$(iflags) $(wflags) -c -m64
@@ -16,37 +21,37 @@ mazeTest:=maze
 
 default:$(name).exe
 
-mazeTest:$(mazeTest).exe
+mazetest:$(mazeTest).exe
 
-$(name).exe:$(name).o shader.o camera.o light.o
-	$(CC) $(name).o shader.o camera.o light.o -o $(name).exe $(lflags) $(libs)
+$(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o
+	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o -o $(name).exe $(lflags) $(libs)
 
-$(name).o:$(name).cc model.cc
-	$(CC) $(cflags) $(name).cc
+$(objloc)/$(name).o:$(name).cc model.cc
+	$(CC) $(cflags) $(name).cc -o $(objloc)/$(name).o
 
-shader.o:shader.cc
-	$(CC) $(cflags) shader.cc
+$(objloc)/shader.o:shader.cc
+	$(CC) $(cflags) shader.cc -o $(objloc)/shader.o
   
-camera.o:camera.cc
-	$(CC) $(cflags) camera.cc
+$(objloc)/camera.o:camera.cc
+	$(CC) $(cflags) camera.cc -o $(objloc)/camera.o
 
-light.o:light.cc
-	$(CC) $(cflags) light.cc
+$(objloc)/light.o:light.cc
+	$(CC) $(cflags) light.cc -o $(objloc)/light.o
 
-$(mazeTest).exe:$(mazeTest).o world.o AI.o stuff.o
-	$(CC) $(mazeTest).o world.o AI.o stuff.o -o $(mazeTest).exe
+$(mazeTest).exe:$(objloc)/$(mazeTest).o $(objloc)/world.o $(objloc)/AI.o $(objloc)/stuff.o
+	$(CC) $(objloc)/$(mazeTest).o $(objloc)/world.o $(objloc)/AI.o $(objloc)/stuff.o -o $(mazeTest).exe
 
-$(mazeTest).o:$(mazeTest).cc
-	$(CC) $(cflags) $(flags) $(mazeTest).cc
+$(objloc)/$(mazeTest).o:$(mazeTest).cc
+	$(CC) $(cflags) $(flags) $(mazeTest).cc -o $(objloc)/$(mazeTest).o
   
-world.o:world.cc
-	$(CC) $(cflags) $(flags) world.cc
+$(objloc)/world.o:world.cc
+	$(CC) $(cflags) $(flags) world.cc -o $(objloc)/world.o
   
-AI.o:AI.cc
-	$(CC) $(cflags) $(flags) AI.cc
+$(objloc)/AI.o:AI.cc
+	$(CC) $(cflags) $(flags) AI.cc -o $(objloc)/AI.o
 
-stuff.o:stuff.cc
-	$(CC) $(cflags) $(flags) stuff.cc
-  
+$(objloc)/stuff.o:stuff.cc
+	$(CC) $(cflags) $(flags) stuff.cc -o $(objloc)/stuff.o
+
 clean:
-	rm $(name).o shader.o model.o camera.o light.o AI.o maze.o world.o stuff.o core $(name).exe $(mazeTest).exe
+	rm $(objloc)/* core $(name).exe $(mazeTest).exe

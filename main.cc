@@ -174,8 +174,8 @@ int main(){
   
   std::vector<std::string> textures;
   std::vector<std::string> specMaps;
-  textures.push_back(std::string("container2.png"));
-  specMaps.push_back(std::string("container2_specular.png"));
+  textures.push_back(std::string("data/container2.png"));
+  specMaps.push_back(std::string("data/container2_specular.png"));
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
             false, true,
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
