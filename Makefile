@@ -10,7 +10,7 @@ iself:=-I./$(inclloc)
 iflags:=$(iglfw) $(igl3w) $(iglm) $(iself)
 lflags:=-L./$(libloc) -L.
 #libs:=-lopengl32 -lgdi32 -luser32 -lkernel32 -lglfw3# -Wl,--subsystem,windows
-libs:=$(libloc)/gl3w.o -lSOIL -lopengl32 -lglfw3 -Wl,-rpath=$(PWD)/$(libloc)# -Wl,--subsystem,windows
+libs:=$(libloc)/gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
 wflags:=-Wall -Wextra -pedantic -std=c++14 -O2
 dflags:=-ggdb3
 cflags:=$(iflags) $(wflags) -c -m64
@@ -27,8 +27,8 @@ mazegame:$(mazeGame).exe
 
 all:default mazetest mazegame
 
-$(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o
-	$(CC) $(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o -o $(mazeGame).exe $(lflags) $(libs)
+$(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o
+	$(CC) $(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o -o $(mazeGame).exe $(lflags) $(libs)
 
 $(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o
 	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o -o $(name).exe $(lflags) $(libs)

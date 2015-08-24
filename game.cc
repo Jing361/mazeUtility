@@ -6,6 +6,8 @@
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
+#include"AI.hh"
+#include"world.hh"
 #include"shader.hh"
 #include"model.hh"
 #include"camera.hh"
@@ -124,8 +126,6 @@ int main(){
   //Wireframe mode
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   
-  shader program("vertex.glsl", "fragment.glsl");
-  
   //Cube, with texture coordinates
   GLfloat vertices[] = {
     //Positions           //Texture    //Normals
@@ -172,10 +172,42 @@ int main(){
     -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,   0.0f,  1.0f,  0.0f,
   };
   
+  std::vector<model> models;
   std::vector<std::string> textures;
   std::vector<std::string> specMaps;
   textures.push_back(std::string("data/container2.png"));
   specMaps.push_back(std::string("data/container2_specular.png"));
+  
+  model floor(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
+              false, true,
+              std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
+              textures.begin(), textures.end(),
+              specMaps.begin(), specMaps.end());
+  floor.translate(6.5, -1, 6.5);
+  floor.scale(13, 1, 13);
+  
+  world w(13, 13, 1);
+  AI ai(&w);
+  ai.generate();
+  
+  for(unsigned int i = 0; i < w.width; ++i){
+    for(unsigned int j = 0; j < w.height; ++j){
+      for(unsigned int k = 0; k < w.depth; ++k){
+        if(w.getSpace(i, j, k) == WALL){
+          model temp(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
+                     false, true,
+                     std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
+                     textures.begin(), textures.end(),
+                     specMaps.begin(), specMaps.end());
+          temp.translate(i, k, j);
+          models.push_back(temp);
+        }
+      }
+    }
+  }
+  
+  shader program("vertex.glsl", "fragment.glsl");
+  
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
             false, true,
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
@@ -185,14 +217,13 @@ int main(){
                false, true,
                std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                textures.begin(), textures.end());
-  camera cam(glm::vec3(0.0, 0.0, 3.0));
+  camera cam(glm::vec3(0.0, 0.0, 3.0), 1.0);
   light lite(glm::vec3(0.0, 3.0, 0.0),
              glm::vec3(0.3f, 0.3f, 0.3f),
              glm::vec3(0.8f, 0.8f, 0.8f),
              glm::vec3(1.0f, 1.0f, 1.0f));
   
-  tri.getShininess() = 32.0f;
-  tri.rotate(-55, 1.0, 0.0, 0.0);
+  tri.getShininess() = 64.0f;
   
   camBox.translate(0.0, 3.0, 0.0);
   camBox.scale(0.2, 0.2, 0.2);
@@ -225,9 +256,14 @@ int main(){
     GLint viewPosLoc = glGetUniformLocation(program.getTarget(), "viewPos");
     glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     
-    lite.getUniforms(program.getTarget());
-    tri.render(program.getTarget());
-    camBox.render(program.getTarget());
+    GLuint target = program.getTarget();
+    lite.getUniforms(target);
+    tri.render(target);
+    camBox.render(target);
+    floor.render(target);
+    for(auto it = models.begin(); it != models.end(); ++it){
+      (*it).render(target);
+    }
     
     glfwSwapBuffers(window);
   }
