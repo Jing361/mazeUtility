@@ -1,7 +1,6 @@
 #include<cmath>
 #include"camera.hh"
 
-
 camera::camera(glm::vec3 position, float speed, glm::vec3 front, glm::vec3 up):
   m_position(position),
   m_front(front),

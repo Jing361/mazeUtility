@@ -13,7 +13,7 @@ lflags:=-L./$(libloc) -L.
 libs:=$(libloc)/gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
 wflags:=-Wall -Wextra -pedantic -std=c++14 -O2
 dflags:=-ggdb3
-cflags:=$(iflags) $(wflags) -c -m64
+cflags:=$(dflags) $(iflags) $(wflags) -c -m64
 
 name:=main
 mazeTest:=maze

@@ -159,12 +159,12 @@ void model::render(GLuint prog){
   GLuint transformLoc = glGetUniformLocation(prog, "transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
   
-  GLint matShineLoc    = glGetUniformLocation(prog, "material.shininess"); 
-  glUniform1f(matShineLoc,    m_shininess);
+  GLint matShineLoc = glGetUniformLocation(prog, "material.shininess"); 
+  glUniform1f(matShineLoc, m_shininess);
   
   glBindVertexArray(m_VAO);
   if(m_indices.size() > 0){
-    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, m_indices.data());
   } else {
     glDrawArrays(GL_TRIANGLES, 0, m_nVert);
   }
