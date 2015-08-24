@@ -6,6 +6,8 @@
 
 class world{
 private:
+  space*** maze;
+  
   void place(space sp, position& pos);
 
 public:
@@ -16,8 +18,9 @@ public:
   void print();
   void clear();
   void placeEnds();
+  space& getSpace(coord x, coord y, coord z);
+  space& getSpace(position pos);
   
-  space*** maze;
   unsigned int width;
   unsigned int height;
   unsigned int depth;

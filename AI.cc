@@ -10,32 +10,32 @@ std::vector<Node> AI::expandSearch(Node node){
   coord x = std::get<0>(node.back());
   coord y = std::get<1>(node.back());
   coord z = std::get<2>(node.back());
-  if(x > 0 && w->maze[x - 1][y][z] != WALL){
+  if(x > 0 && w->getSpace(x - 1, y, z) != WALL){
     Node n = node;
     n.push_back(position(x - 1, y, z));
     ret.push_back(n);
   }
-  if(y > 0 && w->maze[x][y - 1][z] != WALL){
+  if(y > 0 && w->getSpace(x, y - 1, z) != WALL){
     Node n = node;
     n.push_back(position(x, y - 1, z));
     ret.push_back(n);
   }
-  if(z > 0 && w->maze[x][y][z] == STAIR && w->maze[x][y][z - 1] == STAIR){
+  if(z > 0 && w->getSpace(x, y, z) == STAIR && w->getSpace(x, y, z - 1) == STAIR){
     Node n = node;
     n.push_back(position(x, y, z - 1));
     ret.push_back(n);
   }
-  if(x < w->width - 1 && w->maze[x + 1][y][z] != WALL){
+  if(x < w->width - 1 && w->getSpace(x + 1, y, z) != WALL){
     Node n = node;
     n.push_back(position(x + 1, y, z));
     ret.push_back(n);
   }
-  if(y < w->height - 1 && w->maze[x][y + 1][z] != WALL){
+  if(y < w->height - 1 && w->getSpace(x, y + 1, z) != WALL){
     Node n = node;
     n.push_back(position(x, y + 1, z));
     ret.push_back(n);
   }
-  if(z < w->depth && w->maze[x][y][z] == STAIR && w->maze[x][y][z + 1] == STAIR){
+  if(z < w->depth && w->getSpace(x, y, z) == STAIR && w->getSpace(x, y, z + 1) == STAIR){
     Node n = node;
     n.push_back(position(x, y, z + 1));
     ret.push_back(n);
@@ -160,15 +160,15 @@ void AI::generate(){
     explored.push_back(thisNode.second);
 
     //remove wall
-    w->maze[(x1 + x2) / 2][y1][z1] = EMPTY;
-    w->maze[x1][(y1 + y2) / 2][z1] = EMPTY;
+    w->getSpace((x1 + x2) / 2, y1, z1) = EMPTY;
+    w->getSpace(x1, (y1 + y2) / 2, z1) = EMPTY;
     if(z1 != z2){
-      w->maze[x1][y1][z1] = STAIR;
-      w->maze[x1][y1][z2] = STAIR;
+      w->getSpace(x1, y1, z1) = STAIR;
+      w->getSpace(x1, y1, z2) = STAIR;
     }
   }
   //put start back.  it will have been deleted.
   //  also put end back.  it sometimes gets deleted
-  w->maze[std::get<0>(w->start)][std::get<1>(w->start)][std::get<2>(w->start)] = START;
-  w->maze[std::get<0>(w->end)][std::get<1>(w->end)][std::get<2>(w->end)] = END;
+  w->getSpace(std::get<0>(w->start), std::get<1>(w->start), std::get<2>(w->start)) = START;
+  w->getSpace(std::get<0>(w->end), std::get<1>(w->end), std::get<2>(w->end)) = END;
 }

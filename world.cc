@@ -197,3 +197,11 @@ void world::placeEnds(){
   //select end position
   place(END, end);
 }
+
+space& world::getSpace(coord x, coord y, coord z){
+  return maze[x][y][z];
+}
+
+space& world::getSpace(position pos){
+  return getSpace(std::get<0>(pos), std::get<1>(pos), std::get<2>(pos));
+}
