@@ -247,9 +247,17 @@ int main(){
   textures.push_back(std::string("data/container2.png"));
   specMaps.push_back(std::string("data/container2_specular.png"));
   
-  world w(7, 7, 1);
+  world w(11, 11, 1);
   AI ai(&w);
   ai.generate();
+  
+  w.print();
+  
+  std::vector<Node> results = ai();
+  //3 is subtracted from the size to account for the initial position, 
+  //  and moves for each moving into the end positoin and out of the start position
+  std::cout << "difficulty\t" << (double)((*results.begin()).size() - 3) / distance(w.start, w.end) << std::endl;
+  std::cout << std::endl;
   
   std::cout << "loading models.." << std::endl;
   for(unsigned int i = 0; i < w.width; ++i){
@@ -297,6 +305,7 @@ int main(){
                std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
                textures.begin(), textures.end());
   camera cam(glm::vec3(std::get<0>(w.start), std::get<2>(w.start), std::get<1>(w.start)), 6.0);
+  cam.toggleMovement();
   light lite(glm::vec3(w.width/2, 4.0, w.height/2),
              glm::vec3(0.3f, 0.3f, 0.3f),
              glm::vec3(0.8f, 0.8f, 0.8f),

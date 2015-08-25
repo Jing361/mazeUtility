@@ -18,10 +18,16 @@ glm::mat4 camera::getMatrix(){
 
 void camera::tick(direction dir, float dTime){
   float velocity = m_speed * dTime;
+  glm::vec3 front;
+  if(!m_movePlanar){
+    front = m_front;
+  } else {
+    front = glm::cross(m_worldUp, m_right);
+  }
   if(dir == FORWARD){
-    m_position += m_front * velocity;
+    m_position += front * velocity;
   } else if(dir == BACKWARD){
-    m_position-= m_front * velocity;
+    m_position -= front * velocity;
   } else if(dir == LEFT){
     m_position -= m_right * velocity;
   } else if(dir == RIGHT){
@@ -57,4 +63,8 @@ void camera::look(float xoffset, float yoffset){
 
 glm::vec3 camera::getPosition(){
   return m_position;
+}
+
+bool camera::toggleMovement(){
+  return (m_movePlanar = !m_movePlanar);
 }

@@ -17,6 +17,7 @@ private:
   float m_yaw = 0.0;
   float m_pitch = 0.0;
   float m_roll = 0.0;
+  bool m_movePlanar = false;
 
 public:
   enum direction{
@@ -32,6 +33,7 @@ public:
   void look(float yaw, float pitch, float roll);
   void look(float xoffset, float yoffset);
   glm::vec3 getPosition();
+  bool toggleMovement();
 };
 
 #endif
