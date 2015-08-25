@@ -171,27 +171,60 @@ int main(){
     -0.5f,  0.5f,  0.5f,   0.0f, 0.0f,   0.0f,  1.0f,  0.0f,
     -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,   0.0f,  1.0f,  0.0f,
   };
-  GLfloat startCubeVertices[] = {
-    -0.5f,  0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,    1.0f, 0.0f, 0.0f,
+  /*GLfloat colorCubeVertices[] = {
+    -0.5f,  0.5f,  0.5f,
+     0.5f,  0.5f,  0.5f,
+    -0.5f, -0.5f,  0.5f,
+     0.5f, -0.5f,  0.5f,
      
-    -0.5f,  0.5f, -0.5f,    1.0f, 0.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,    1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,    1.0f, 0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,    1.0f, 0.0f, 0.0f
-  };
-  GLfloat endCubeVertices[] = {
-    -0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,    0.0f, 1.0f, 0.0f,
-     
-    -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f
+    -0.5f,  0.5f, -0.5f,
+     0.5f,  0.5f, -0.5f,
+    -0.5f, -0.5f, -0.5f,
+     0.5f, -0.5f, -0.5f
+  };*/
+  GLfloat colorCubeVertices[] = {
+    //Positions
+    -0.5f, -0.5f, -0.5f,
+     0.5f, -0.5f, -0.5f,
+     0.5f,  0.5f, -0.5f,
+     0.5f,  0.5f, -0.5f,
+    -0.5f,  0.5f, -0.5f,
+    -0.5f, -0.5f, -0.5f,
+
+    -0.5f, -0.5f,  0.5f,
+     0.5f, -0.5f,  0.5f,
+     0.5f,  0.5f,  0.5f,
+     0.5f,  0.5f,  0.5f,
+    -0.5f,  0.5f,  0.5f,
+    -0.5f, -0.5f,  0.5f,
+
+    -0.5f,  0.5f,  0.5f,
+    -0.5f,  0.5f, -0.5f,
+    -0.5f, -0.5f, -0.5f,
+    -0.5f, -0.5f, -0.5f,
+    -0.5f, -0.5f,  0.5f,
+    -0.5f,  0.5f,  0.5f,
+
+     0.5f,  0.5f,  0.5f,
+     0.5f,  0.5f, -0.5f,
+     0.5f, -0.5f, -0.5f,
+     0.5f, -0.5f, -0.5f,
+     0.5f, -0.5f,  0.5f,
+     0.5f,  0.5f,  0.5f,
+
+    -0.5f, -0.5f, -0.5f,
+     0.5f, -0.5f, -0.5f,
+     0.5f, -0.5f,  0.5f,
+     0.5f, -0.5f,  0.5f,
+    -0.5f, -0.5f,  0.5f,
+    -0.5f, -0.5f, -0.5f,
+
+    -0.5f,  0.5f, -0.5f,
+     0.5f,  0.5f, -0.5f,
+     0.5f,  0.5f,  0.5f,
+     0.5f,  0.5f,  0.5f,
+    -0.5f,  0.5f,  0.5f,
+    -0.5f,  0.5f, -0.5f
   };
   GLuint colorCubeIndices[] = {
     0, 1, 2,
@@ -209,13 +242,12 @@ int main(){
   };
   
   std::vector<model> models;
-  std::vector<model> colorModels;
   std::vector<std::string> textures;
   std::vector<std::string> specMaps;
   textures.push_back(std::string("data/container2.png"));
   specMaps.push_back(std::string("data/container2_specular.png"));
   
-  world w(21, 21, 1);
+  world w(7, 7, 1);
   AI ai(&w);
   ai.generate();
   
@@ -247,18 +279,13 @@ int main(){
   
   std::cout << "loading end points.." << std::endl;
   //add start and finish indicators
-  model startCube(startCubeVertices, startCubeVertices+(sizeof(startCubeVertices) / sizeof(GLfloat)),
-                  true, false,
-                  colorCubeIndices, colorCubeIndices+(sizeof(colorCubeIndices)/sizeof(GLfloat)));
-  model endCube(endCubeVertices, endCubeVertices+(sizeof(endCubeVertices) / sizeof(GLfloat)),
-                  true, false,
-                  colorCubeIndices, colorCubeIndices+(sizeof(colorCubeIndices)/sizeof(GLfloat)));
-                  
+  model startCube(colorCubeVertices, colorCubeVertices+(sizeof(colorCubeVertices) / sizeof(GLfloat)),
+                  false, false);
+  model endCube(colorCubeVertices, colorCubeVertices+(sizeof(colorCubeVertices) / sizeof(GLfloat)),
+                  false, false);
+
   startCube.translate(std::get<0>(w.start), std::get<2>(w.start), std::get<1>(w.start));
   endCube.translate(std::get<0>(w.end), std::get<2>(w.end), std::get<1>(w.end));
-  
-  colorModels.push_back(startCube);
-  colorModels.push_back(endCube);
   
   std::cout << "loading shaders.." << std::endl;
   shader program("gameVertex.glsl", "gameFragment.glsl");
@@ -323,9 +350,11 @@ int main(){
     viewPosLoc = glGetUniformLocation(target, "viewPos");
     glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     
-    for(auto it = colorModels.begin(); it != colorModels.end(); ++it){
-      (*it).render(target);
-    }
+    GLint colorLoc = glGetUniformLocation(target, "Color");
+    glUniform3f(colorLoc, 1.0, 0.0, 0.0);
+    startCube.render(target);
+    glUniform3f(colorLoc, 0.0, 1.0, 0.0);
+    endCube.render(target);
     
     glfwSwapBuffers(window);
   }

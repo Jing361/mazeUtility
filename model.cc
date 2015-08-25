@@ -159,8 +159,10 @@ void model::render(GLuint prog){
   GLuint transformLoc = glGetUniformLocation(prog, "transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
   
-  GLint matShineLoc = glGetUniformLocation(prog, "material.shininess"); 
-  glUniform1f(matShineLoc, m_shininess);
+  if(m_specMaps.size() > 0){
+    GLint matShineLoc = glGetUniformLocation(prog, "material.shininess"); 
+    glUniform1f(matShineLoc, m_shininess);
+  }
   
   glBindVertexArray(m_VAO);
   if(m_indices.size() > 0){
