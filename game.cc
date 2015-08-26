@@ -256,7 +256,16 @@ int main(){
   std::vector<Node> results = ai();
   //3 is subtracted from the size to account for the initial position, 
   //  and moves for each moving into the end positoin and out of the start position
-  std::cout << "difficulty\t" << (double)((*results.begin()).size() - 3) / distance(w.start, w.end) << std::endl;
+  double diff = (double)((*results.begin()).size() - 3) / distance(w.start, w.end);
+  int i = 1;
+  while(diff <= 1.0){
+    ai.generate();
+    results = ai();
+    diff = (double)((*results.begin()).size() - 3) / distance(w.start, w.end);
+    i++;
+  }
+  std::cout << "difficulty\t" << diff << std::endl;
+  std::cout << i << " iterations to generate" << std::endl;
   std::cout << std::endl;
   
   std::cout << "loading models.." << std::endl;
