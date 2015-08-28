@@ -1,6 +1,10 @@
 #include<gl3w.h>
 #include<glfw3.h>
 #include<iostream>
+#include<fstream>
+#include<sstream>
+#include<string>
+#include<tuple>
 #include<cmath>
 #include<functional>
 #include<glm/glm.hpp>
@@ -73,6 +77,101 @@ void moveCam(camera& cam, const float dTime){
   cam.look(xoffset, yoffset);
 }
 
+typedef std::tuple<GLfloat, GLfloat, GLfloat> triple;
+triple extractData(std::string line, bool check = true){
+  triple ret;
+  GLfloat value;
+  std::string token;
+  std::stringstream ss(line);
+  //dump first value
+  ss >> token;
+  
+  ss >> value;
+  std::get<0>(ret) = value;
+  ss >> value;
+  std::get<1>(ret) = value;
+  if(check){
+    ss >> value;
+    std::get<2>(ret) = value;
+  }
+  
+  return ret;
+}
+
+std::vector<GLfloat> objLoader(std::string fileName){
+  std::ifstream file(fileName);
+  std::string line;
+  std::vector<GLfloat> object;
+  std::vector<triple> vertices;
+  std::vector<std::tuple<GLfloat, GLfloat>> texCoords;
+  std::vector<triple> normals;
+  std::vector<triple> color;
+  std::vector<std::string> faces;
+  
+  while(std::getline(file, line)){
+    if(line[0] != '#'){
+      if(line[0] == 'v'){
+        if(line[1] == 'n'){
+          normals.push_back(extractData(line));
+        } else if(line[1] == 't'){
+          triple vals = extractData(line, false);
+          std::tuple<GLfloat, GLfloat> actual = std::make_tuple(std::get<0>(vals), std::get<1>(vals));
+          texCoords.push_back(actual);
+        } else {
+          vertices.push_back(extractData(line));
+        }
+      } else if(line[0] == 'f'){
+        faces.push_back(line);
+      }
+    }
+  }
+  
+  for(auto it = faces.begin(); it != faces.end(); ++it){
+    std::stringstream ss(*it);
+    std::string token;
+    //dump first value; 'f'
+    ss >> token;
+    
+    while(ss >> token){
+      std::string value;
+      std::stringstream iss(token);
+      std::getline(ss, value, '/');
+      std::stringstream jss(value);
+      int idx;
+      jss >> idx;
+      
+      //position
+      {
+        auto it = vertices[idx];
+        object.push_back(std::get<0>(it));
+        object.push_back(std::get<1>(it));
+        object.push_back(std::get<2>(it));
+      }
+      //color
+      if(color.size() > 0){
+        auto it = color[idx];
+        object.push_back(std::get<0>(it));
+        object.push_back(std::get<1>(it));
+        object.push_back(std::get<2>(it));
+      }
+      //texture
+      if(texCoords.size() > 0){
+        auto it = texCoords[idx];
+        object.push_back(std::get<0>(it));
+        object.push_back(std::get<1>(it));
+      }
+      //normal
+      if(normals.size() > 0){
+        auto it = normals[idx];
+        object.push_back(std::get<0>(it));
+        object.push_back(std::get<1>(it));
+        object.push_back(std::get<2>(it));
+      }
+    }
+  }
+  return object;
+}
+
 int main(){
   unsigned int glMajor = 3;
   unsigned int glminor = 3;
@@ -110,7 +209,7 @@ int main(){
   
   std::cout << "OpenGL " << glGetString(GL_VERSION) << ", GLSL " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
-  glViewport(0, 0, 800, 600);
+  glViewport(0, 0, screenWidth, screenHeight);
   
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   
@@ -176,6 +275,10 @@ int main(){
   std::vector<std::string> specMaps;
   textures.push_back(std::string("data/container2.png"));
   specMaps.push_back(std::string("data/container2_specular.png"));
+  
+  model monkey(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
+               false, true);
+  
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
             false, true,
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
@@ -226,8 +329,9 @@ int main(){
     glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     
     lite.getUniforms(program.getTarget());
-    tri.render(program.getTarget());
+    //tri.render(program.getTarget());
     camBox.render(program.getTarget());
+    monkey.render(program.getTarget());
     
     glfwSwapBuffers(window);
   }
