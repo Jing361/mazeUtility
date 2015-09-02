@@ -135,10 +135,11 @@ std::vector<GLfloat> objLoader(std::string fileName){
     while(ss >> token){
       std::string value;
       std::stringstream iss(token);
-      std::getline(ss, value, '/');
+      std::getline(iss, value, '/');
       std::stringstream jss(value);
       int idx;
       jss >> idx;
+      --idx;
       
       //position
       {
@@ -275,10 +276,10 @@ int main(){
   std::vector<std::string> specMaps;
   textures.push_back(std::string("data/container2.png"));
   specMaps.push_back(std::string("data/container2_specular.png"));
+  auto monkeyData = objLoader(std::string("data/monkey.obj"));
   
-  model monkey(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
+  model monkey(monkeyData.begin(), monkeyData.end(),
                false, true);
-  
   model tri(vertices, vertices+(sizeof(vertices) / sizeof(GLfloat)),
             false, true,
             std::vector<GLuint>::iterator(), std::vector<GLuint>::iterator(),
