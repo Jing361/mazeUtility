@@ -13,7 +13,7 @@ private:
   glm::vec3 m_right;
   glm::vec3 m_up;
   float m_speed;
-  float m_sensitivity = 0.05;
+  float m_sensitivity = .15;
   float m_yaw = 0.0;
   float m_pitch = 0.0;
   float m_roll = 0.0;
