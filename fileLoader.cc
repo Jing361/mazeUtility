@@ -1,4 +1,5 @@
 #include<sstream>
+#include<string>
 #include<fstream>
 #include"fileLoader.hh"
 
@@ -94,5 +95,26 @@ std::vector<GLfloat> fileLoader::objLoader(std::string fileName){
       }
     }
   }
+  return object;
+}
+
+std::vector<GLfloat> fileLoader::flatLoader(std::string fileName){
+  std::vector<GLfloat> object;
+  std::ifstream file(fileName);
+  std::string line;
+  
+  while(file >> line){
+    std::string token;
+    std::stringstream ss(line);
+    
+    while(std::getline(ss, token, ',')){
+      GLfloat value;
+      
+      std::stringstream iss(token);
+      iss >> value;
+      object.push_back(value);
+    }
+  }
+  
   return object;
 }

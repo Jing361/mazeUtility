@@ -12,6 +12,7 @@ class fileLoader{
   
 public:
   static std::vector<GLfloat> objLoader(std::string fileName);
+  static std::vector<GLfloat> flatLoader(std::string fileName);
 };
 
 #endif
