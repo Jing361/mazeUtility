@@ -30,9 +30,12 @@ all:default mazetest mazegame
 $(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o
 	$(CC) $(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o -o $(mazeGame).exe $(lflags) $(libs)
 
-$(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o
-	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o -o $(name).exe $(lflags) $(libs)
+$(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o
+	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o -o $(name).exe $(lflags) $(libs)
 
+$(objloc)/fileLoader.o:fileLoader.cc
+	$(CC) $(cflags) fileLoader.cc -o $(objloc)/fileLoader.o
+  
 $(objloc)/$(name).o:$(name).cc model.cc
 	$(CC) $(cflags) $(name).cc -o $(objloc)/$(name).o
 
