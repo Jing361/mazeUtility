@@ -1,0 +1,4 @@
+http://www.transmissionzero.co.uk/computing/using-glut-with-mingw/
+http://www.felixgers.de/teaching/jogl/index.html
+http://www.opengl-tutorial.org/beginners-tutorials/
+http://learnopengl.com/
