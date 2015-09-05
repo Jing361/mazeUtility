@@ -13,7 +13,7 @@ lflags:=-L./$(libloc) -L.
 libs:=$(libloc)/gl3w.o -lSOIL -lopengl32 -lglfw3# -Wl,--subsystem,windows
 wflags:=-Wall -Wextra -pedantic -std=c++14 -O2
 dflags:=-ggdb3
-cflags:=$(iflags) $(wflags) -c -m64
+cflags:=$(dflags) $(iflags) $(wflags) -c -m64
 
 name:=main
 mazeTest:=maze
@@ -30,8 +30,14 @@ all:default mazetest mazegame
 $(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o
 	$(CC) $(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o -o $(mazeGame).exe $(lflags) $(libs)
 
-$(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o
-	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o -o $(name).exe $(lflags) $(libs)
+$(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o
+	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o -o $(name).exe $(lflags) $(libs)
+
+$(objloc)/model.o:model.cc
+	$(CC) $(cflags) model.cc -o $(objloc)/model.o
+
+$(objloc)/glGame.o:glGame.cc
+	$(CC) $(cflags) glGame.cc -o $(objloc)/glGame.o
 
 $(objloc)/fileLoader.o:fileLoader.cc
 	$(CC) $(cflags) fileLoader.cc -o $(objloc)/fileLoader.o

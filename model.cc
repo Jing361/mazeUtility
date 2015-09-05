@@ -1,9 +1,11 @@
 #include<sstream>
-#include<SOIL.h>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
+#include"model.hh"
 
-template<typename vertItr,
+#include<iostream>
+
+/*template<typename vertItr,
 typename idxItr,
 typename texItr,
 typename specItr>
@@ -130,7 +132,7 @@ model::model(vertItr firstVert, vertItr lastVert,
     
     m_specMaps.push_back(tex);
   }
-}
+}*/
 
 model::~model(){
   glDeleteVertexArrays(1, &m_VAO);

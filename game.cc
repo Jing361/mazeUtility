@@ -247,7 +247,7 @@ int main(){
   textures.push_back(std::string("data/container2.png"));
   specMaps.push_back(std::string("data/container2_specular.png"));
   
-  world w(9, 9, 1);
+  world w(25, 25, 1);
   AI ai(&w);
   ai.generate();
   
