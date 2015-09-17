@@ -51,13 +51,14 @@ glGame::glGame(glm::vec3 position, unsigned int width, unsigned int height, std:
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   //Wireframe mode
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  
-  view = cam.getMatrix();
-  projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
 }
 
 glGame::~glGame(){
   glfwTerminate();
+}
+
+void glGame::setProg(GLint prog){
+  m_prog = prog;
 }
 
 void glGame::registerObject(GLuint target, model& obj){
@@ -93,46 +94,59 @@ void glGame::setCameraCallback(void(*camera_callback)(camera&, const float)){
 void glGame::loop(){
   glfwPollEvents();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glUseProgram(m_prog);
   
   curFrame = glfwGetTime();
   GLfloat dTime = curFrame - lastFrame;
   lastFrame = curFrame;
-
-  view = cam.getMatrix();
-  projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
   
   moveCam(cam, dTime);
   
-  GLuint prog = -1;
+  view = cam.getMatrix();
+  projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
+  
   GLint viewLoc = -1;
   GLint projLoc = -1;
   GLint viewPosLoc = -1;
-  for(auto it = lights.begin(); it != lights.end(); ++it){
+  viewLoc = glGetUniformLocation(m_prog, "view");
+  projLoc = glGetUniformLocation(m_prog, "projection");
+  viewPosLoc = glGetUniformLocation(m_prog, "viewPos");
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+  glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+  glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
+  
+  (*lights.begin()).second.getUniforms(m_prog);
+  for(auto it = models.begin(); it != models.end(); ++it){
+    (*it).second.scale(1.3, 1.3, 1.3);
+    (*it).second.render(m_prog);
+  }
+  /*for(auto it = lights.begin(); it != lights.end(); ++it){
     if((*it).first != prog){
       prog = (*it).first;
-      
+      (*it).second.getUniforms(prog);
     }
   }
+  
   prog = -1;
   for(auto it = models.begin(); it != models.end(); ++it){
     if((*it).first != prog){
-      prog = (*it).first;
-      glUseProgram(prog);
-      viewLoc = glGetUniformLocation(prog, "view");
-      projLoc = glGetUniformLocation(prog, "projection");
-      viewPosLoc = glGetUniformLocation(prog, "viewPos");
-      glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-      glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-      glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
-      auto low = lights.lower_bound(prog);
-      auto high = lights.upper_bound(prog);
-      for(auto jt = low; jt != high; ++jt){
-        (*jt).second.getUniforms(prog);
-      }
+      
     }
-    
+    prog = (*it).first;
+    glUseProgram(prog);
+    viewLoc = glGetUniformLocation(prog, "view");
+    projLoc = glGetUniformLocation(prog, "projection");
+    viewPosLoc = glGetUniformLocation(prog, "viewPos");
+    auto low = lights.lower_bound(prog);
+    auto high = lights.upper_bound(prog);
+    for(auto jt = low; jt != high; ++jt){
+      (*jt).second.getUniforms(prog);
+    }
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     (*it).second.render(prog);
-  }
+  }*/
   
   glfwSwapBuffers(window);
 }
