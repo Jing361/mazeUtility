@@ -21,7 +21,7 @@ GLfloat xoffset;
 GLfloat yoffset;
 float lastX;
 float lastY;
-float maxFov = 100;
+float maxFov = 180;
 float fov = 100;
 
 void moveCam(camera& cam, const float dTime){
@@ -129,6 +129,7 @@ int main(){
   game.registerObject(program.getTarget(), monkey);
   game.registerObject(program.getTarget(), tri);
   game.registerObject(program.getTarget(), camBox);
+  
   game.registerLight(program.getTarget(), lite);
   game.registerLight(program.getTarget(), lite2);
   
