@@ -39,14 +39,10 @@ private:
   std::multimap<GLint, model> models;
   std::multimap<GLint, light> lights;
   void(*moveCam)(camera&, const float);
-  
-  GLint m_prog;
 
 public:
   glGame(glm::vec3 position, unsigned int width, unsigned int height, std::string name =  "Untitled");
   ~glGame();
-  
-  void setProg(GLint prog);
   
   void registerObject(GLuint target, model& obj);
   void registerLight(GLuint target, light& lite);

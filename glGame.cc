@@ -60,10 +60,6 @@ glGame::~glGame(){
   glfwTerminate();
 }
 
-void glGame::setProg(GLint prog){
-  m_prog = prog;
-}
-
 void glGame::registerObject(GLuint target, model& obj){
   models.insert(std::pair<GLuint, model>(target, obj));
 }
@@ -97,7 +93,6 @@ void glGame::setCameraCallback(void(*camera_callback)(camera&, const float)){
 void glGame::loop(){
   glfwPollEvents();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glUseProgram(m_prog);
   
   curFrame = glfwGetTime();
   GLfloat dTime = curFrame - lastFrame;
@@ -111,12 +106,6 @@ void glGame::loop(){
   GLint viewLoc = -1;
   GLint projLoc = -1;
   GLint viewPosLoc = -1;
-  viewLoc = glGetUniformLocation(m_prog, "view");
-  projLoc = glGetUniformLocation(m_prog, "projection");
-  viewPosLoc = glGetUniformLocation(m_prog, "viewPos");
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-  glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-  glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
   
   GLint prog = -1;
   for(auto it = models.begin(); it != models.end(); ++it){

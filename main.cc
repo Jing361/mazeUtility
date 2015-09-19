@@ -83,7 +83,6 @@ int main(){
   glGame game(glm::vec3(0.0, 0.0, 3.0),
               800, 600);
   shader program("vertex.glsl", "fragment.glsl");
-  game.setProg(program.getTarget());
   
   game.setKeyCallback(key_callback);
   game.setCursorCallback(mouse_callback);
