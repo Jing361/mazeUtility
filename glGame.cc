@@ -120,8 +120,9 @@ void glGame::loop(){
       glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
       auto low = lights.lower_bound(prog);
       auto high = lights.upper_bound(prog);
+      int i = 0;
       for(auto jt = low; jt != high; ++jt){
-        (*jt).second.getUniforms(prog);
+        (*jt).second.getUniforms(prog, i++);
       }
     }
     (*it).second.render(prog);

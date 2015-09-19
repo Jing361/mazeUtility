@@ -1,3 +1,5 @@
+#include<string>
+#include<sstream>
 #include"light.hh"
 
 light::light(glm::vec3 position, glm::vec3 amb, glm::vec3 diff, glm::vec3 spec):
@@ -7,11 +9,21 @@ light::light(glm::vec3 position, glm::vec3 amb, glm::vec3 diff, glm::vec3 spec):
   m_specular(spec){
 }
 
-void light::getUniforms(GLuint prog){
-  GLint lightPosLoc      = glGetUniformLocation(prog, "light.position");
-  GLint lightAmbientLoc  = glGetUniformLocation(prog, "light.ambient");
-  GLint lightDiffuseLoc  = glGetUniformLocation(prog, "light.diffuse");
-  GLint lightSpecularLoc = glGetUniformLocation(prog, "light.specular");
+void light::getUniforms(GLuint prog, int index){
+  std::string lightName = "light";
+  if(index >= 0){
+    std::stringstream ss;
+    
+    ss << index;
+    
+    lightName += "[";
+    lightName += ss.str();
+    lightName += "]";
+  }
+  GLint lightPosLoc      = glGetUniformLocation(prog, (lightName + ".position").c_str());
+  GLint lightAmbientLoc  = glGetUniformLocation(prog, (lightName + ".ambient").c_str());
+  GLint lightDiffuseLoc  = glGetUniformLocation(prog, (lightName + ".diffuse").c_str());
+  GLint lightSpecularLoc = glGetUniformLocation(prog, (lightName + ".specular").c_str());
   
   glUniform3f(lightPosLoc, m_position.x, m_position.y, m_position.z);
   glUniform3f(lightAmbientLoc,  m_ambient.r, m_ambient.g, m_ambient.b);

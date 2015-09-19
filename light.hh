@@ -15,7 +15,7 @@ public:
   
   light(glm::vec3 position, glm::vec3 amb, glm::vec3 diff, glm::vec3 spec);
   
-  void getUniforms(GLuint prog);
+  void getUniforms(GLuint prog, int index = -1);
 };
 
 #endif
