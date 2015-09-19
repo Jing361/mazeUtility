@@ -151,13 +151,14 @@ public:
       m_specMaps.push_back(tex);
     }
   }
-  ~model();
   
   void render(GLuint prog);
   float& getShininess();
   void translate(double x, double y, double z);
   void rotate(float r, double x, double y, double z);
   void scale(double x, double y, double z);
+  
+  void cleanUp();
 };
 
 //#include"model.cc"

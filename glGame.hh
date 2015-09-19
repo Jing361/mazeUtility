@@ -36,8 +36,8 @@ private:
   glm::mat4 view;
   glm::mat4 projection;
   camera cam;
-  std::multimap<GLuint, model> models;
-  std::multimap<GLuint, light> lights;
+  std::multimap<GLint, model> models;
+  std::multimap<GLint, light> lights;
   void(*moveCam)(camera&, const float);
   
   GLint m_prog;

@@ -54,6 +54,9 @@ glGame::glGame(glm::vec3 position, unsigned int width, unsigned int height, std:
 }
 
 glGame::~glGame(){
+  for(auto it = models.begin(); it != models.end(); ++it){
+    (*it).second.cleanUp();
+  }
   glfwTerminate();
 }
 
@@ -115,38 +118,25 @@ void glGame::loop(){
   glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
   glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
   
-  (*lights.begin()).second.getUniforms(m_prog);
+  GLint prog = -1;
   for(auto it = models.begin(); it != models.end(); ++it){
-    (*it).second.scale(1.3, 1.3, 1.3);
-    (*it).second.render(m_prog);
-  }
-  /*for(auto it = lights.begin(); it != lights.end(); ++it){
     if((*it).first != prog){
       prog = (*it).first;
-      (*it).second.getUniforms(prog);
+      glUseProgram(prog);
+      viewLoc = glGetUniformLocation(prog, "view");
+      projLoc = glGetUniformLocation(prog, "projection");
+      viewPosLoc = glGetUniformLocation(prog, "viewPos");
+      glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+      glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+      glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
+      auto low = lights.lower_bound(prog);
+      auto high = lights.upper_bound(prog);
+      for(auto jt = low; jt != high; ++jt){
+        (*jt).second.getUniforms(prog);
+      }
     }
-  }
-  
-  prog = -1;
-  for(auto it = models.begin(); it != models.end(); ++it){
-    if((*it).first != prog){
-      
-    }
-    prog = (*it).first;
-    glUseProgram(prog);
-    viewLoc = glGetUniformLocation(prog, "view");
-    projLoc = glGetUniformLocation(prog, "projection");
-    viewPosLoc = glGetUniformLocation(prog, "viewPos");
-    auto low = lights.lower_bound(prog);
-    auto high = lights.upper_bound(prog);
-    for(auto jt = low; jt != high; ++jt){
-      (*jt).second.getUniforms(prog);
-    }
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
     (*it).second.render(prog);
-  }*/
+  }
   
   glfwSwapBuffers(window);
 }

@@ -125,7 +125,7 @@ int main(){
   
   game.registerObject(program.getTarget(), monkey);
   game.registerObject(program.getTarget(), tri);
-  //game.registerObject(program.getTarget(), camBox);
+  game.registerObject(program.getTarget(), camBox);
   game.registerLight(program.getTarget(), lite);
   game.run();
   

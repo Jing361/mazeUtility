@@ -134,7 +134,8 @@ model::model(vertItr firstVert, vertItr lastVert,
   }
 }*/
 
-model::~model(){
+
+void model::cleanUp(){
   glDeleteVertexArrays(1, &m_VAO);
   glDeleteBuffers(1, &m_VBO);
   if(m_indices.size() > 0){
