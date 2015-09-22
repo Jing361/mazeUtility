@@ -28,20 +28,21 @@ out vec4 color;
 
 uniform Material material;
 uniform Light light[5];
+uniform int nLights;
 uniform vec3 viewPos;
 
 void main(){
   vec3 norm = normalize(Normal);
   vec3 viewDir = normalize(viewPos - FragPos);
   
-  vec3 result = vec3(0.0, 0.0, 0.0);
+  vec3 result = vec3(0.0);
   
-  for(int i = 0; i < 5; ++i){
+  for(int i = 0; i < nLights; ++i){
     Light lite = light[i];
     
     vec3 lightDir = normalize(lite.position - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-  
+    
     vec3 ambient = lite.ambient * vec3(texture(material.diffuse, TexCoord));
     
     float diff = max(dot(norm, lightDir), 0.0);
@@ -52,8 +53,7 @@ void main(){
     
     float distance = length(lite.position - FragPos);
     //1 / constant + linear * distance + quadratic * distance^2
-    float attenuation = 1.0f/(lite.constant + lite.linear * distance + lite.quadratic * (distance * distance));
-    //float attenuation = 1.0f/(1.0 + 0.0014 * distance + 0.000007 * (distance * distance));
+    float attenuation = 1.0f/(lite.constant + (lite.linear * distance) + (lite.quadratic * (distance * distance)));
     
     ambient *= attenuation;
     diffuse *= attenuation;

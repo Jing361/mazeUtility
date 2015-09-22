@@ -106,6 +106,7 @@ void glGame::loop(){
   GLint viewLoc = -1;
   GLint projLoc = -1;
   GLint viewPosLoc = -1;
+  GLint nlightsLoc = -1;
   
   GLint prog = -1;
   for(auto it = models.begin(); it != models.end(); ++it){
@@ -115,9 +116,13 @@ void glGame::loop(){
       viewLoc = glGetUniformLocation(prog, "view");
       projLoc = glGetUniformLocation(prog, "projection");
       viewPosLoc = glGetUniformLocation(prog, "viewPos");
+      nlightsLoc = glGetUniformLocation(prog, "nLights");
+      
       glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
       glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
+      glUniform1i(nlightsLoc, lights.size());
+      
       auto low = lights.lower_bound(prog);
       auto high = lights.upper_bound(prog);
       int i = 0;
