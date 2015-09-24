@@ -1,8 +1,18 @@
-#include<string>
 #include<sstream>
 #include"light.hh"
 
-#include<iostream>
+std::string light::calcVarName(std::string name, int index){
+  if(index >= 0){
+    std::stringstream ss;
+    
+    ss << index;
+    
+    name += "[";
+    name += ss.str();
+    name += "]";
+  }
+  return name;
+}
 
 light::light(glm::vec3 position, glm::vec3 amb, glm::vec3 diff, glm::vec3 spec):
   m_position(position),
@@ -12,16 +22,7 @@ light::light(glm::vec3 position, glm::vec3 amb, glm::vec3 diff, glm::vec3 spec):
 }
 
 void light::getUniforms(GLuint prog, int index){
-  std::string lightName = "light";
-  if(index >= 0){
-    std::stringstream ss;
-    
-    ss << index;
-    
-    lightName += "[";
-    lightName += ss.str();
-    lightName += "]";
-  }
+  std::string lightName(calcVarName("lights", index));
   
   GLint lightPosLoc       = glGetUniformLocation(prog, (lightName + ".position").c_str());
   
@@ -39,7 +40,7 @@ void light::getUniforms(GLuint prog, int index){
   glUniform3f(lightDiffuseLoc,  m_diffuse.r, m_diffuse.g, m_diffuse.b);
   glUniform3f(lightSpecularLoc, m_specular.r, m_specular.g, m_specular.b);
   
-  glUniform1f(lightConstantLoc,  1.0f);
-  glUniform1f(lightLinearLoc,    0.0014f);
-  glUniform1f(lightQuadraticLoc, 0.000007f);
+  glUniform1f(lightConstantLoc,  m_constant);
+  glUniform1f(lightLinearLoc,    m_linear);
+  glUniform1f(lightQuadraticLoc, m_quadratic);
 }

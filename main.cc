@@ -13,6 +13,7 @@
 #include"model.hh"
 #include"camera.hh"
 #include"light.hh"
+#include"spotLight.hh"
 #include"fileLoader.hh"
 #include"glGame.hh"
 
@@ -81,7 +82,7 @@ void scroll_callback(GLFWwindow* window, double xchange, double ychange){
 
 int main(){
   glGame game(glm::vec3(0.0, 0.0, 3.0),
-              1024, 768);
+              1900, 1000);
   shader program("vertex.glsl", "fragment.glsl");
   
   game.setKeyCallback(key_callback);
@@ -111,14 +112,20 @@ int main(){
                textures.begin(), textures.end());
   light lite(glm::vec3(0.0, 3.0, 0.0),
              glm::vec3(0.3f, 0.3f, 0.3f),
-             glm::vec3(0.5f, 0.5f, 0.5f),
+             glm::vec3(0.8f, 0.8f, 0.8f),
              glm::vec3(1.0f, 1.0f, 1.0f));
   light lite2(glm::vec3(0.0, -3.0, 0.0),
               glm::vec3(0.3f, 0.3f, 0.3f),
               glm::vec3(0.9f, 0.5f, 0.9f),
               glm::vec3(1.0f, 0.5f, 1.0f));
+  spotLight spot(glm::vec3(0.0, 3.0, 0.0),
+                 glm::vec3(0.1f, 0.1f, 0.1f),
+                 glm::vec3(0.7f, 0.7f, 0.7f),
+                 glm::vec3(1.0f, 1.0f, 1.0f),
+                 glm::vec3(0.0f, 1.0f, 0.0f),
+                 3);
   
-  monkey.translate(0, -5, 0);
+  monkey.translate(0, -6, 0);
   
   tri.getShininess() = 32.0f;
   tri.rotate(-55, 1.0, 0.0, 0.0);
@@ -126,12 +133,50 @@ int main(){
   camBox.translate(0.0, 3.0, 0.0);
   camBox.scale(0.2, 0.2, 0.2);
   
-  game.registerObject(program.getTarget(), monkey);
+  //game.registerObject(program.getTarget(), monkey);
+  {
+    model cp = tri;
+    cp.translate(2, 5, -15);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(-1.5, -2.2, -2.5);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(-3.8, -2, -12.3);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(2.4, -0.4, -3.5);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(-1.7f,  3.0f, -7.5f);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(1.3f, -2.0f, -2.5f);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(1.5f,  2.0f, -2.5f);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(1.5f,  0.2f, -1.5f);
+    game.registerObject(program.getTarget(), cp);
+  }{
+    model cp = tri;
+    cp.translate(-1.3f,  1.0f, -1.5f);
+    game.registerObject(program.getTarget(), cp);
+  }
   game.registerObject(program.getTarget(), tri);
   game.registerObject(program.getTarget(), camBox);
   
-  game.registerLight(program.getTarget(), lite);
-  game.registerLight(program.getTarget(), lite2);
+  //game.registerLight(program.getTarget(), lite);
+  //game.registerLight(program.getTarget(), lite2);
+  game.registerLight(program.getTarget(), spot);
   
   game.run();
   

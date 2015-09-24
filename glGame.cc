@@ -4,7 +4,7 @@
 glGame::glGame(glm::vec3 position, unsigned int width, unsigned int height, std::string name):
   screenWidth(width),
   screenHeight(height),
-  cam(position){
+  cam(position, 1.5){
   unsigned int glMajor = 3;
   unsigned int glminor = 3;
   
@@ -17,6 +17,7 @@ glGame::glGame(glm::vec3 position, unsigned int width, unsigned int height, std:
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
   
   window = glfwCreateWindow(screenWidth, screenHeight, name.c_str(), nullptr, nullptr);
+  glfwSetWindowPos(window, 10, 20);
   if(window == nullptr){
     glfwTerminate();
     throw glInitException("Failed to create GLFW window");
@@ -60,12 +61,16 @@ glGame::~glGame(){
   glfwTerminate();
 }
 
-void glGame::registerObject(GLuint target, model& obj){
-  models.insert(std::pair<GLuint, model>(target, obj));
+void glGame::registerObject(GLint target, model& obj){
+  models.insert(std::pair<GLint, model>(target, obj));
 }
 
-void glGame::registerLight(GLuint target, light& lite){
-  lights.insert(std::pair<GLuint, light>(target, lite));
+void glGame::registerLight(GLint target, light& lite){
+  lights.insert(std::pair<GLint, light>(target, lite));
+}
+
+void glGame::registerSpotLight(GLint target, spotLight& lite){
+  spots.insert(std::pair<GLint, spotLight>(target, lite));
 }
 
 void glGame::setKeyCallback(void(*key_callback)(GLFWwindow*, int, int, int, int)){
@@ -107,6 +112,7 @@ void glGame::loop(){
   GLint projLoc = -1;
   GLint viewPosLoc = -1;
   GLint nlightsLoc = -1;
+  GLint nspotsLoc = -1;
   
   GLint prog = -1;
   for(auto it = models.begin(); it != models.end(); ++it){
@@ -117,16 +123,24 @@ void glGame::loop(){
       projLoc = glGetUniformLocation(prog, "projection");
       viewPosLoc = glGetUniformLocation(prog, "viewPos");
       nlightsLoc = glGetUniformLocation(prog, "nLights");
+      nspotsLoc = glGetUniformLocation(prog, "nSpots");
       
       glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
       glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
       glUniform1i(nlightsLoc, lights.size());
+      glUniform1i(nspotsLoc, spots.size());
       
       auto low = lights.lower_bound(prog);
       auto high = lights.upper_bound(prog);
       int i = 0;
       for(auto jt = low; jt != high; ++jt){
+        (*jt).second.getUniforms(prog, i++);
+      }
+      i = 0;
+      auto bottom = spots.lower_bound(prog);
+      auto top = spots.upper_bound(prog);
+      for(auto jt = bottom; jt != top; ++jt){
         (*jt).second.getUniforms(prog, i++);
       }
     }

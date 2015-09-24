@@ -10,6 +10,7 @@
 #include"camera.hh"
 #include"model.hh"
 #include"light.hh"
+#include"spotLight.hh"
 
 class glInitException:public std::exception{
 private:
@@ -38,18 +39,22 @@ private:
   camera cam;
   std::multimap<GLint, model> models;
   std::multimap<GLint, light> lights;
+  std::multimap<GLint, spotLight> spots;
   void(*moveCam)(camera&, const float);
 
 public:
   glGame(glm::vec3 position, unsigned int width, unsigned int height, std::string name =  "Untitled");
   ~glGame();
   
-  void registerObject(GLuint target, model& obj);
-  void registerLight(GLuint target, light& lite);
+  void registerObject(GLint target, model& obj);
+  void registerLight(GLint target, light& lite);
+  void registerSpotLight(GLint target, spotLight& lite);
+  
   void setKeyCallback(void(GLFWwindow*, int, int, int, int));
   void setCursorCallback(void(GLFWwindow*, double, double));
   void setScrollCallback(void(GLFWwindow*, double, double));
   void setCameraCallback(void(camera&, const float));
+  
   void run();
   void loop();
 };

@@ -30,8 +30,8 @@ all:default mazetest mazegame
 $(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o $(objloc)/model.o
 	$(CC) $(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o $(objloc)/model.o -o $(mazeGame).exe $(lflags) $(libs)
 
-$(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o
-	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o -o $(name).exe $(lflags) $(libs)
+$(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/spotLight.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o
+	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/spotLight.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o -o $(name).exe $(lflags) $(libs)
 
 $(objloc)/model.o:model.cc
 	$(CC) $(cflags) model.cc -o $(objloc)/model.o
@@ -56,6 +56,9 @@ $(objloc)/camera.o:camera.cc
 
 $(objloc)/light.o:light.cc
 	$(CC) $(cflags) light.cc -o $(objloc)/light.o
+
+$(objloc)/spotLight.o:spotLight.cc
+	$(CC) $(cflags) spotLight.cc -o $(objloc)/spotLight.o
 
 $(mazeTest).exe:$(objloc)/$(mazeTest).o $(objloc)/world.o $(objloc)/AI.o $(objloc)/stuff.o
 	$(CC) $(objloc)/$(mazeTest).o $(objloc)/world.o $(objloc)/AI.o $(objloc)/stuff.o -o $(mazeTest).exe
