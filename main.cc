@@ -133,7 +133,7 @@ int main(){
   camBox.translate(0.0, 3.0, 0.0);
   camBox.scale(0.2, 0.2, 0.2);
   
-  //game.registerObject(program.getTarget(), monkey);
+  game.registerObject(program.getTarget(), monkey);
   {
     model cp = tri;
     cp.translate(2, 5, -15);
@@ -174,9 +174,9 @@ int main(){
   game.registerObject(program.getTarget(), tri);
   game.registerObject(program.getTarget(), camBox);
   
-  //game.registerLight(program.getTarget(), lite);
-  //game.registerLight(program.getTarget(), lite2);
-  game.registerLight(program.getTarget(), spot);
+  game.registerLight(program.getTarget(), lite);
+  game.registerLight(program.getTarget(), lite2);
+  //game.registerLight(program.getTarget(), spot);
   
   game.run();
   
