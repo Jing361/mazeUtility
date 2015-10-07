@@ -25,10 +25,15 @@ typedef struct{
   float m_shininess;
 } material;
 
+typedef struct{
+  GLuint m_vbo;
+  int m_nVert;
+} mesh;
+
 class resourceManager{
 private:
   std::map<std::string, material> m_materials;
-  std::map<std::string, GLuint> m_meshes;
+  std::map<std::string, mesh> m_meshes;
   
   void acquireMaterial(std::string name, std::string file, float shine);
   void acquireMesh(std::string name, std::string file);
@@ -39,6 +44,7 @@ public:
   ~resourceManager();
 
   void acquire(std::string name, std::string file, float shine = 32.0);
+  GLuint construct(std::string mat, std::string mesh, bool hasNormal = false, bool hasColor = false);
 };
 
 #endif
