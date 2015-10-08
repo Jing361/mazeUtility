@@ -44,7 +44,8 @@ public:
   ~resourceManager();
 
   void acquire(std::string name, std::string file, float shine = 32.0);
-  GLuint construct(std::string mat, std::string mesh, bool hasNormal = false, bool hasColor = false);
+  material getMaterial(std::string name);
+  mesh getMesh(std::string name);
 };
 
 #endif

@@ -113,76 +113,31 @@ void resourceManager::acquire(std::string pName, std::string file, float shine){
   }
 }
 
-GLuint resourceManager::construct(std::string matStr, std::string meshStr, bool hasNormal, bool hasColor){
-  material mat;
-  mesh mes;
-  unsigned int stride = 3;
-  unsigned int attr = 0;
-  unsigned int offset = 0;
-  GLuint vao;
+material resourceManager::getMaterial(std::string name){
+  material ret;
+  auto itr = m_materials.find(name);
   
-  if(m_materials.find(matStr) != m_materials.end()){
-    mat = m_materials[matStr];
-  }
-  if(m_meshes.find(meshStr) != m_meshes.end()){
-    mes = m_meshes[meshStr];
+  if(itr != m_materials.end()){
+    ret = *itr;
+  } else {
+    ret.m_diffMap = -1;
+    ret.m_specMap = -1;
+    ret.m_shininess = -1;
   }
   
-  if(hasColor){
-    stride += 3;
-  }
-  if(hasNormal){
-    stride += 3;
-  }
-  if(firstTex != lastTex || firstSpec != lastSpec){
-    stride += 2;
-  }
-  m_nVert = m_vertices.size() / stride;
+  return ret;
+}
+
+mesh resourceManager::getMesh(std::string name){
+  mesh ret;
+  auto itr = m_meshes.find(name);
   
-  glGenVertexArrays(1, &vao);
-  
-  glBindVertexArray(vao);
-  glBindBuffer(GL_ARRAY_BUFFER, mes.m_vbo);
-  
-  //position
-  {
-    unsigned int nData = 3;
-    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)offset);
-    glEnableVertexAttribArray(attr);
-    offset += nData;
-  }
-  ++attr;
-  
-  //color
-  if(hasColor){
-    unsigned int nData = 3;
-    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
-    glEnableVertexAttribArray(attr);
-    offset += nData;
-  }
-  ++attr;
-  
-  //texture coodinates
-  if(firstTex != lastTex || firstSpec != lastSpec){
-    unsigned int nData = 2;
-    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
-    glEnableVertexAttribArray(attr);
-    offset += nData;
-  }
-  ++attr;
-  
-  //normal vector
-  if(hasNormal){
-    unsigned int nData = 3;
-    glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
-    glEnableVertexAttribArray(attr);
-    offset += nData;
+  if(itr != m_meshes.end()){
+    ret = *itr;
+  } else {
+    ret.m_vbo = -1;
+    ret.m_nVert = -1;
   }
   
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-  
-  //diffuse and specular maps
-  
-  return vao;
+  return ret;
 }
