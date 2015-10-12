@@ -1,5 +1,9 @@
 #include"entity.hh"
 
+void entity::attach(sceneNode* pNode){
+  m_parent = pNode;
+}
+
 entity::entity(material mat, mesh mes, bool hasNormal, bool hasColor):
   m_mat(mat),
   m_mesh(mes){
@@ -79,10 +83,8 @@ void entity::render(GLuint prog){
   GLuint transformLoc = glGetUniformLocation(prog, "transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
   
-  if(m_specMaps.size() > 0){
-    GLint matShineLoc = glGetUniformLocation(prog, "material.shininess"); 
-    glUniform1f(matShineLoc, m_shininess);
-  }
+  GLint matShineLoc = glGetUniformLocation(prog, "material.shininess"); 
+  glUniform1f(matShineLoc, m_shininess);
   
   glBindVertexArray(m_VAO);
   glDrawArrays(GL_TRIANGLES, 0, m_mesh.m_nVert);
