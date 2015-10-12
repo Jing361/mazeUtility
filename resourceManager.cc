@@ -120,9 +120,7 @@ material resourceManager::getMaterial(std::string name){
   if(itr != m_materials.end()){
     ret = *itr;
   } else {
-    ret.m_diffMap = -1;
-    ret.m_specMap = -1;
-    ret.m_shininess = -1;
+    throw invalidResourceException("Invalid resource" + name);
   }
   
   return ret;
@@ -135,8 +133,7 @@ mesh resourceManager::getMesh(std::string name){
   if(itr != m_meshes.end()){
     ret = *itr;
   } else {
-    ret.m_vbo = -1;
-    ret.m_nVert = -1;
+    throw invalidResourceException("Invalid resource" + name);
   }
   
   return ret;

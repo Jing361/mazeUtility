@@ -62,7 +62,7 @@ entity::entity(material mat, mesh mes, bool hasNormal, bool hasColor):
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void entity::render(){
+void entity::render(GLuint prog){
   //Put textures in memory
   unsigned int i = 0;
   glActiveTexture(GL_TEXTURE0 + i);

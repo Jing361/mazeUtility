@@ -8,9 +8,25 @@
 class invalideFileNameException:public std::exception{
 private:
   std::string message;
+  std::string fileName;
   
 public:
   invalideFileNameException(std::string msg):
+    message(msg){
+  }
+  
+  std::string what(){
+    return message;
+  }
+};
+
+class invalidResourceException:public std::exception{
+private:
+  std::string message;
+  std::string resourceName;
+  
+public:
+  invalidResourceException(std::string msg):
     message(msg){
   }
   
