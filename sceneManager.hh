@@ -24,10 +24,12 @@ private:
   
   std::map<GLuint, entity*> m_entities;
   std::map<GLuint, light*> m_lights;
+  std::map<GLuint, spotLight*> m_spots;
   rootNode m_root;
   
   void attachObject(entity* pEnt, GLuint shader);
   void attachObject(light* pLight, GLuint shader);
+  void attachObject(spotLight* pLight, GLuint shader);
   
   friend rootNode;
 

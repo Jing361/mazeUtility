@@ -25,3 +25,12 @@ void sceneNode::attachObject(light* pLight, GLuint shader){
     pLight->attach(this);
   }
 }
+
+glm::mat4 sceneNode::getTransform(){
+  glm::mat4 transform;
+  if(m_parent){
+    transform = m_parent->getTransform();
+  }
+  
+  return transform * m_transform;
+}

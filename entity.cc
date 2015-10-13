@@ -1,3 +1,6 @@
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 #include"entity.hh"
 
 void entity::attach(sceneNode* pNode){
@@ -67,6 +70,12 @@ entity::entity(material mat, mesh mes, bool hasNormal, bool hasColor):
 }
 
 void entity::render(GLuint prog){
+  glm::mat4 transform;
+  
+  if(m_parent){
+    transform = m_parent->getTransform();
+  }
+  
   //Put textures in memory
   unsigned int i = 0;
   glActiveTexture(GL_TEXTURE0 + i);
@@ -79,13 +88,13 @@ void entity::render(GLuint prog){
   glUniform1i(glGetUniformLocation(prog, "material.specular"), i);
   ++i;
   
-  //put transform matrix in memory
-  GLuint transformLoc = glGetUniformLocation(prog, "transform");
-  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_transform));
-  
   GLint matShineLoc = glGetUniformLocation(prog, "material.shininess"); 
   glUniform1f(matShineLoc, m_shininess);
-  
+
+  //put transform matrix in memory
+  GLuint transformLoc = glGetUniformLocation(prog, "transform");
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+    
   glBindVertexArray(m_VAO);
   glDrawArrays(GL_TRIANGLES, 0, m_mesh.m_nVert);
   glBindVertexArray(0);
