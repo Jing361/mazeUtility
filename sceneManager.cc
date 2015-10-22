@@ -1,5 +1,9 @@
 #include"sceneManager.hh"
 
+sceneManager::sceneManager():
+  m_root(this){
+}
+
 void sceneManager::attachObject(entity* pEnt, GLuint shader){
   m_entities.insert(std::pair<GLuint, entity*>(shader, pEnt));
 }
@@ -47,4 +51,8 @@ void sceneManager::render(){
     }
     (*it).second.render(prog);
   }
+}
+
+sceneNode* sceneManager::getRootNode(){
+  return &m_root;
 }

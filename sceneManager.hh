@@ -5,6 +5,7 @@
 #include"sceneNode.hh"
 #include"entity.hh"
 #include"light.hh"
+#include"spotLight.hh"
 
 class sceneManager{
 private:
@@ -13,6 +14,10 @@ private:
     sceneManager* m_manager;
   
   public:
+    rootNode(sceneManager* pManager)
+      m_manager(pManager){
+    }
+  
     void attachObject(entity* pEnt, GLuint shader){
       m_manager->attachObject(pEnt, shader);
     }
@@ -34,7 +39,10 @@ private:
   friend rootNode;
 
 public:
+  sceneManager();
+  
   void render();
+  sceneNode* getRootNode();
 };
 
 #endif

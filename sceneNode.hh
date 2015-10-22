@@ -15,6 +15,7 @@ private:
 public:
   sceneNode(sceneNode* pNode = nullptr);
   
+  //can't clean up child? :o
   sceneNode* createChild();
   virtual void attachObject(entity* pEnt, GLuint shader);
   virtual void attachObject(light* pLight, GLuint shader);

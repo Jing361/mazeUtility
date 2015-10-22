@@ -1,7 +1,7 @@
 #include"sceneNode.hh"
 
-sceneNode::sceneNode(sceneNode* pNode = nullptr){
-  m_parent = pNode;
+sceneNode::sceneNode(sceneNode* pNode = nullptr):
+  m_parent(pNode){
 }
 
 sceneNode* sceneNode::createChild(){
