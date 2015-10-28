@@ -6,6 +6,7 @@
 #include"entity.hh"
 #include"light.hh"
 #include"spotLight.hh"
+#include"renderer.hh"
 
 class sceneManager{
 private:
@@ -39,7 +40,7 @@ private:
   friend rootNode;
 
 public:
-  sceneManager();
+  sceneManager(glRenderer* renderer);
   
   void render();
   sceneNode* getRootNode();

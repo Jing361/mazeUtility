@@ -25,13 +25,33 @@ mazetest:$(mazeTest).exe
 
 mazegame:$(mazeGame).exe
 
+test:struct.exe
+
 all:default mazetest mazegame
+
+struct.exe:$(objLoc)/struct.o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/entity.o $(objloc)/resourceManager.o $(objloc)/sceneManager.o $(objloc)/sceneNode.o
+	$(CC) $(objLoc)/struct.o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/entity.o $(objloc)/resourceManager.o $(objloc)/sceneManager.o $(objloc)/sceneNode.o -o struct.exe $(lflags) $(libs)
 
 $(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o $(objloc)/model.o
 	$(CC) $(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/AI.o $(objloc)/world.o $(objloc)/stuff.o $(objloc)/model.o -o $(mazeGame).exe $(lflags) $(libs)
 
 $(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/spotLight.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o
 	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/spotLight.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o -o $(name).exe $(lflags) $(libs)
+
+$(objLoc)/struct.o:struct.cc
+	$(CC) $(cflags) struct.cc -o $(objloc)/struct.o
+
+$(objloc)/entity.o:entity.cc
+	$(CC) $(cflags) entity.cc -o $(objloc)/entity.o
+
+$(objloc)/resourceManager.o:resourceManager.cc
+	$(CC) $(cflags) resourceManager.cc -o $(objloc)/resourceManager.o
+
+$(objloc)/sceneManager.o:sceneManager.cc
+	$(CC) $(cflags) sceneManager.cc -o $(objloc)/sceneManager.o
+
+$(objloc)/sceneNode.o:sceneNode.cc
+	$(CC) $(cflags) sceneNode.cc -o $(objloc)/sceneNode.o
 
 $(objloc)/model.o:model.cc
 	$(CC) $(cflags) model.cc -o $(objloc)/model.o

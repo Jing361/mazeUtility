@@ -88,6 +88,12 @@ void resourceManager::acquireMesh(std::string name, std::string fileName){
   m_meshes.insert(std::pair<std::string, mesh>(name, mes));
 }
 
+resourceManager::resourceManager(glRenderer* renderer){
+  if(!renderer){
+    throw invalidRendererException("provided renderer is invalid!");
+  }
+}
+
 resourceManager::~resourceManager(){
   for(auto it = m_materials.begin(); it != m_materials.end(); ++it){
     glDeleteTextures(1, &(*it).second.m_diffMap);

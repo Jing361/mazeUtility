@@ -4,6 +4,7 @@
 #include<string>
 #include<map>
 #include<exception>
+#include"renderer.hh"
 
 class invalideFileNameException:public std::exception{
 private:
@@ -35,16 +36,19 @@ public:
   }
 };
 
-typedef struct{
-  GLuint m_diffMap;
-  GLuint m_specMap;
-  float m_shininess;
-} material;
+class invalidRendererException:public std::exception{
+private:
+  std::string message;
 
-typedef struct{
-  GLuint m_vbo;
-  int m_nVert;
-} mesh;
+public:
+  invalidRendererException(std::string msg):
+    message(msg){
+  }
+  
+  std::string what(){
+    return message;
+  }
+};
 
 class resourceManager{
 private:
@@ -57,6 +61,18 @@ private:
   static void checkFile(std::string fileName);
   
 public:
+  typedef struct{
+    GLuint m_diffMap;
+    GLuint m_specMap;
+    float m_shininess;
+  } material;
+
+  typedef struct{
+    GLuint m_vbo;
+    int m_nVert;
+  } mesh;
+  
+  resourceManager(glRenderer* renderer);
   ~resourceManager();
 
   void acquire(std::string name, std::string file, float shine = 32.0);
