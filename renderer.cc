@@ -1,10 +1,9 @@
-#include<iostream>
 #include"renderer.hh"
 
-renderer::renderer(glm::vec3 position, unsigned int width, unsigned int height, std::string name):
+renderer::renderer(camera* pCam, unsigned int width, unsigned int height, std::string name):
   screenWidth(width),
   screenHeight(height),
-  cam(position, 1.5){
+  cam(pCam){
   unsigned int glMajor = 3;
   unsigned int glminor = 3;
   
@@ -61,6 +60,12 @@ renderer::~renderer(){
   glfwTerminate();
 }
 
+void attachCamera(camera* pCam){
+  if(pCam != nullptr){
+    cam = pCam;
+  }
+}
+
 void renderer::registerObject(GLint target, model& obj){
   models.insert(std::pair<GLint, model>(target, obj));
 }
@@ -103,9 +108,9 @@ void renderer::loop(){
   GLfloat dTime = curFrame - lastFrame;
   lastFrame = curFrame;
   
-  moveCam(cam, dTime);
+  moveCam(*cam, dTime);
   
-  view = cam.getMatrix();
+  view = cam->getMatrix();
   projection = glm::perspective(glm::radians(fov), (float)screenWidth/screenHeight, 0.1f, 100.0f);
   
   GLint viewLoc = -1;
@@ -127,7 +132,7 @@ void renderer::loop(){
       
       glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-      glUniform3f(viewPosLoc, cam.getPosition().x, cam.getPosition().y, cam.getPosition().z);
+      glUniform3f(viewPosLoc, cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
       glUniform1i(nlightsLoc, lights.size());
       glUniform1i(nspotsLoc, spots.size());
       

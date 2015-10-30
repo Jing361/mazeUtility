@@ -18,7 +18,8 @@ public:
   //can't clean up child? :o
   sceneNode* createChild();
   virtual void attachObject(entity* pEnt, GLuint shader);
-  virtual void attachObject(light* pLight, GLuint shader);
+  virtual void attachPointLight(light* pLight, GLuint shader);
+  virtual void attachAmbientLight(ambientLight* pLight, GLuint shader);
   glm::mat4 getTransform();
 };
 

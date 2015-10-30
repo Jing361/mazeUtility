@@ -17,7 +17,16 @@ void sceneNode::attachObject(entity* pEnt, GLuint shader){
   }
 }
 
-void sceneNode::attachObject(light* pLight, GLuint shader){
+void sceneNode::attachPointLight(light* pLight, GLuint shader){
+  if(m_parent){
+    m_parent->attachObject(pLight, shader);
+  }
+  if(pLight){
+    pLight->attach(this);
+  }
+}
+
+void sceneNode::attachAmbientLight(ambientLight* pLight, GLuint shader){
   if(m_parent){
     m_parent->attachObject(pLight, shader);
   }

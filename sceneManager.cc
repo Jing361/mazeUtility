@@ -1,6 +1,6 @@
 #include"sceneManager.hh"
 
-sceneManager::sceneManager(glRenderer* renderer):
+sceneManager::sceneManager(renderer* pRenderer):
   m_root(this){
 }
 

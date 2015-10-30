@@ -6,6 +6,7 @@
 #include<string>
 #include<map>
 #include<exception>
+#include<memory>
 #include<glm/glm.hpp>
 #include"camera.hh"
 #include"entity.hh"
@@ -27,7 +28,7 @@ public:
   }
 };
 
-class glGame{
+class renderer{
 private:
   GLfloat curFrame;
   GLfloat lastFrame;
@@ -37,17 +38,19 @@ private:
   GLFWwindow* window;
   glm::mat4 view;
   glm::mat4 projection;
-  camera cam;
-  std::multimap<GLint, model> models;
+  camera* cam;
+  std::multimap<GLint, entity> models;
   std::multimap<GLint, light> lights;
   std::multimap<GLint, spotLight> spots;
   void(*moveCam)(camera&, const float);
 
 public:
-  glGame(glm::vec3 position, unsigned int width, unsigned int height, std::string name =  "Untitled");
-  ~glGame();
+  renderer(camera* pCam, unsigned int width, unsigned int height, std::string name =  "Untitled");
+  ~renderer();
   
-  void registerObject(GLint target, model& obj);
+  void attachCamera(camera* pCam);
+  
+  void registerObject(GLint target, entity& obj);
   void registerLight(GLint target, light& lite);
   void registerSpotLight(GLint target, spotLight& lite);
   

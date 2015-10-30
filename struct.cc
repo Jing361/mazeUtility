@@ -11,15 +11,13 @@
 int main(){
   //camera could be defined using ctor arguments
   //glRenderer renderer(glm::vec3(0,0,3), 1900, 1000);
-  glRenderer renderer;
+  camera cam(glm::vec3(0,0,3), 1.5);
+  renderer engine(&cam, 1900, 1000);
   //parameter confirms existence of valid renderer
-  resourceManager rm(&renderer);
+  resourceManager rm(&engine);
   //parameter confirms existence of valid renderer, and tells renderer to use this manager for scene
-  sceneManager manager(&renderer);
+  sceneManager manager(&engine);
   shader basicShader("fragment.glsl", "vertex.glsl");
-  camera cam(glm::vec3(0,0,3), 1900, 1000);
-  
-  renderer.attachCamera(&cam);
   
   rm.acquire("crate", "mesh/crate.obj");
   rm.acquire("crate", "mat/crateA.png", 32);
@@ -30,14 +28,14 @@ int main(){
   ambientLight glow(glm::vec3(ambientColor));
   light lamp(glm::vec3(diffuse), glm::vec3(specular));
   
-  manager.getRootNode()->attachAmbient(&glow);
+  manager.getRootNode()->attachAmbientLight(&glow);
   
   sceneNode* node = manager.getRootNode()->createChild();
   node->setPosition(glm::vec3(0,0,0));
   node->attachObject(&crate, basicShader.getTarget());
   node->attachLight(&lamp);
   
-  renderer.run();
+  engine.run();
   
   return 0;
 }

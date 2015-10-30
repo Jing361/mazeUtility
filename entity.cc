@@ -7,9 +7,13 @@ void entity::attach(sceneNode* pNode){
   m_parent = pNode;
 }
 
-entity::entity(material mat, mesh mes, bool hasNormal, bool hasColor):
-  m_mat(mat),
-  m_mesh(mes){
+entity::entity(std::tuple<resourceManager::mesh, resourceManager::material> res, bool hasNormal, bool hasColor):
+  entity(std::get<0>(res), std::get<1>(res), hasNormal, hasColor){
+}
+
+entity::entity(resourceManager::mesh mes, resourceManager::material mat, bool hasNormal, bool hasColor):
+  m_mesh(mes),
+  m_mat(mat){
   unsigned int stride = 3;
   unsigned int attr = 0;
   unsigned int offset = 0;

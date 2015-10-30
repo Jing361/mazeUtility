@@ -15,7 +15,7 @@ private:
     sceneManager* m_manager;
   
   public:
-    rootNode(sceneManager* pManager)
+    rootNode(sceneManager* pManager):
       m_manager(pManager){
     }
   
@@ -40,7 +40,7 @@ private:
   friend rootNode;
 
 public:
-  sceneManager(glRenderer* renderer);
+  sceneManager(renderer* pRenderer);
   
   void render();
   sceneNode* getRootNode();

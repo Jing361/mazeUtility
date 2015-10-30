@@ -4,7 +4,10 @@
 #include<string>
 #include<map>
 #include<exception>
-#include"renderer.hh"
+#include<tuple>
+#include<gl3w.h>
+//#include"renderer.hh"
+class renderer;
 
 class invalideFileNameException:public std::exception{
 private:
@@ -51,15 +54,6 @@ public:
 };
 
 class resourceManager{
-private:
-  std::map<std::string, material> m_materials;
-  std::map<std::string, mesh> m_meshes;
-  
-  void acquireMaterial(std::string name, std::string file, float shine);
-  void acquireMesh(std::string name, std::string file);
-  static GLint acquireTexture(std::string file);
-  static void checkFile(std::string fileName);
-  
 public:
   typedef struct{
     GLuint m_diffMap;
@@ -71,13 +65,23 @@ public:
     GLuint m_vbo;
     int m_nVert;
   } mesh;
+private:
+  std::map<std::string, material> m_materials;
+  std::map<std::string, mesh> m_meshes;
   
-  resourceManager(glRenderer* renderer);
+  void acquireMaterial(std::string name, std::string file, float shine);
+  void acquireMesh(std::string name, std::string file);
+  static GLint acquireTexture(std::string file);
+  static void checkFile(std::string fileName);
+  
+public:  
+  resourceManager(renderer* renderer);
   ~resourceManager();
 
   void acquire(std::string name, std::string file, float shine = 32.0);
   material getMaterial(std::string name);
   mesh getMesh(std::string name);
+  std::tuple<mesh, material> getResources(std::string name);
 };
 
 #endif

@@ -144,3 +144,7 @@ mesh resourceManager::getMesh(std::string name){
   
   return ret;
 }
+
+std::tuple<mesh, material> resourceManager::getResources(std::string name){
+  return std::tuple<mesh, material> (getMesh(name), getMaterial(name));
+}
