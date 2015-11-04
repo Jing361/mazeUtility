@@ -1,6 +1,7 @@
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
+#include"sceneNode.hh"
 #include"entity.hh"
 
 void entity::attach(sceneNode* pNode){
@@ -24,7 +25,7 @@ entity::entity(resourceManager::mesh mes, resourceManager::material mat, bool ha
   if(hasNormal){
     stride += 3;
   }
-  if(firstTex != lastTex || firstSpec != lastSpec){
+  if(mat.m_diffMap != -1 || mat.m_specMap != -1){
     stride += 2;
   }
   m_mesh.m_nVert /= stride;
@@ -53,7 +54,7 @@ entity::entity(resourceManager::mesh mes, resourceManager::material mat, bool ha
   ++attr;
   
   //texture coodinates
-  if(firstTex != lastTex || firstSpec != lastSpec){
+  if(mat.m_diffMap != -1 || mat.m_specMap != -1){
     unsigned int nData = 2;
     glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
@@ -83,22 +84,23 @@ void entity::render(GLuint prog){
   //Put textures in memory
   unsigned int i = 0;
   glActiveTexture(GL_TEXTURE0 + i);
-  glBindTexture(GL_TEXTURE_2D, *it);
+  glBindTexture(GL_TEXTURE_2D, m_mat.m_diffMap);
   glUniform1i(glGetUniformLocation(prog, "material.diffuse"), i);
   ++i;
   
   glActiveTexture(GL_TEXTURE0 + i);
-  glBindTexture(GL_TEXTURE_2D, *it);
+  glBindTexture(GL_TEXTURE_2D, m_mat.m_specMap);
   glUniform1i(glGetUniformLocation(prog, "material.specular"), i);
   ++i;
   
   GLint matShineLoc = glGetUniformLocation(prog, "material.shininess"); 
-  glUniform1f(matShineLoc, m_shininess);
+  glUniform1f(matShineLoc, m_mat.m_shininess);
 
   //put transform matrix in memory
   GLuint transformLoc = glGetUniformLocation(prog, "transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-    
+  
+  //should bind vbo, not vao..
   glBindVertexArray(m_VAO);
   glDrawArrays(GL_TRIANGLES, 0, m_mesh.m_nVert);
   glBindVertexArray(0);

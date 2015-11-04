@@ -14,7 +14,6 @@ protected:
 public:
   glm::vec3 m_position;
   
-  glm::vec3 m_ambient;
   glm::vec3 m_diffuse;
   glm::vec3 m_specular;
   
@@ -39,7 +38,7 @@ public:
   float m_linear = 0.14;
   float m_quadratic = 0.07;*/
   
-  light(glm::vec3 position, glm::vec3 amb, glm::vec3 diff, glm::vec3 spec);
+  light(glm::vec3 position, glm::vec3 diff, glm::vec3 spec);
   
   void getUniforms(GLuint prog, int index = -1);
 };

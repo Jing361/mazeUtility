@@ -10,8 +10,8 @@ class sceneNode;
 class entity{
 private:
   GLuint m_vao;
-  resourceManager::material m_mat;
   resourceManager::mesh m_mesh;
+  resourceManager::material m_mat;
   sceneNode* m_parent = nullptr;
   
   void attach(sceneNode* pNode);
@@ -22,7 +22,7 @@ public:
   entity(std::tuple<resourceManager::mesh, resourceManager::material> res, bool hasNormal = false, bool hasColor = false);
   entity(resourceManager::mesh mes, resourceManager::material mat, bool hasNormal = false, bool hasColor = false);
   
-  void render();
+  void render(GLuint prog);
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define __SCENE_MANAGER_HH__
 
 #include<map>
+#include<vector>
 #include"sceneNode.hh"
 #include"entity.hh"
 #include"light.hh"
@@ -18,24 +19,30 @@ private:
     rootNode(sceneManager* pManager):
       m_manager(pManager){
     }
-  
+    
     void attachObject(entity* pEnt, GLuint shader){
       m_manager->attachObject(pEnt, shader);
     }
     
-    void attachObject(light* pLight, GLuint shader){
-      m_manager->attachObject(pLight, shader);
+    void attachPointLight(light* pLight, GLuint shader){
+      m_manager->attachPointLight(pLight, shader);
+    }
+  
+    void attachAmbientLight(glm::vec3 ambientColor, GLuint shader){
+      m_manager->attachAmbientLight(ambientColor, shader);
     }
   };
   
   std::map<GLuint, entity*> m_entities;
   std::map<GLuint, light*> m_lights;
   std::map<GLuint, spotLight*> m_spots;
+  std::map<GLuint, glm::vec3> m_ambient;
   rootNode m_root;
   
   void attachObject(entity* pEnt, GLuint shader);
-  void attachObject(light* pLight, GLuint shader);
-  void attachObject(spotLight* pLight, GLuint shader);
+  void attachPointLight(light* pLight, GLuint shader);
+  void attachSpotLight(spotLight* pLight, GLuint shader);
+  void attachAmbientLight(glm::vec3 ambientColor, GLuint shader);
   
   friend rootNode;
 

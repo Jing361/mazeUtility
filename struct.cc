@@ -25,15 +25,15 @@ int main(){
   entity crate(rm.getMesh("crate"), rm.getMaterial("crate"));
   entity crateA(rm.getResources("crate"));
   
-  ambientLight glow(glm::vec3(ambientColor));
-  light lamp(glm::vec3(diffuse), glm::vec3(specular));
+  glm::vec3 glow(0, .1, 0);
+  light lamp(glm::vec3(0,0,0), glm::vec3(1,0,0), glm::vec3(0,0,1));
   
-  manager.getRootNode()->attachAmbientLight(&glow);
+  manager.getRootNode()->attachAmbientLight(glow, basicShader.getTarget());
   
   sceneNode* node = manager.getRootNode()->createChild();
   node->setPosition(glm::vec3(0,0,0));
   node->attachObject(&crate, basicShader.getTarget());
-  node->attachLight(&lamp);
+  node->attachPointLight(&lamp, basicShader.getTarget());
   
   engine.run();
   

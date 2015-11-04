@@ -8,12 +8,16 @@ void sceneManager::attachObject(entity* pEnt, GLuint shader){
   m_entities.insert(std::pair<GLuint, entity*>(shader, pEnt));
 }
 
-void sceneManager::attachObject(light* pLight, GLuint shader){
+void sceneManager::attachPointLight(light* pLight, GLuint shader){
   m_lights.insert(std::pair<GLuint, light*>(shader, pLight));
 }
 
-void sceneManager::attachObject(spotLight* pLight, GLuint shader){
+void sceneManager::attachSpotLight(spotLight* pLight, GLuint shader){
   m_spots.insert(std::pair<GLuint, spotLight*>(shader, pLight));
+}
+
+void sceneManager::attachAmbientLight(glm::vec3 ambientColor, GLuint shader){
+  m_ambient.insert(std::pair<GLuint, glm::vec3>(shader, ambientColor));
 }
 
 void sceneManager::render(){
