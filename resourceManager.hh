@@ -72,7 +72,7 @@ private:
   void acquireMaterial(std::string name, std::string file, float shine);
   void acquireMesh(std::string name, std::string file);
   static GLint acquireTexture(std::string file);
-  static void checkFile(std::string fileName);
+  static bool checkFile(std::string fileName);
   
 public:  
   resourceManager(renderer* renderer);

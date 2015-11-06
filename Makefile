@@ -38,6 +38,9 @@ $(mazeGame).exe:$(objloc)/$(mazeGame).o $(objloc)/shader.o $(objloc)/camera.o $(
 $(name).exe:$(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/spotLight.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o
 	$(CC) $(objloc)/$(name).o $(objloc)/shader.o $(objloc)/camera.o $(objloc)/light.o $(objloc)/spotLight.o $(objloc)/fileLoader.o $(objloc)/glGame.o $(objloc)/model.o -o $(name).exe $(lflags) $(libs)
 
+#$(objLoc)/%.o:%.cc:
+#	$(CC) $(cflags) $< -o $@
+
 $(objLoc)/struct.o:struct.cc
 	$(CC) $(cflags) struct.cc -o $(objloc)/struct.o
 

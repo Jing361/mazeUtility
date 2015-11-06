@@ -4,7 +4,7 @@
 #include"resourceManager.hh"
 
 GLint resourceManager::acquireTexture(std::string file){
-  GLint tex;
+  GLuint tex;
   unsigned char* image;
   int width, height;
   
@@ -27,7 +27,7 @@ GLint resourceManager::acquireTexture(std::string file){
   return tex;
 }
 
-static bool resourceManager::checkFile(std::string fileName){
+bool resourceManager::checkFile(std::string fileName){
   std::ifstream file(fileName);
   bool ret = file;
   
@@ -83,13 +83,13 @@ void resourceManager::acquireMesh(std::string name, std::string fileName){
   
   glBindBuffer(GL_ARRAY_BUFFER, mes.m_vbo);
   glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(GLfloat), verts.data(), GL_STATIC_DRAW);
-  glBindBuffer(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
   
   m_meshes.insert(std::pair<std::string, mesh>(name, mes));
 }
 
-resourceManager::resourceManager(glRenderer* renderer){
-  if(!renderer){
+resourceManager::resourceManager(renderer* pRenderer){
+  if(!pRenderer){
     throw invalidRendererException("provided renderer is invalid!");
   }
 }
@@ -97,13 +97,13 @@ resourceManager::resourceManager(glRenderer* renderer){
 resourceManager::~resourceManager(){
   for(auto it = m_materials.begin(); it != m_materials.end(); ++it){
     glDeleteTextures(1, &(*it).second.m_diffMap);
-    if((*it).second.m_specMap != -1){
+    if((*it).second.m_specMap != (unsigned int)-1){
       glDeleteTextures(1, &(*it).second.m_specMap);
     }
   }
   
-  for(auto it = m_meshes.begin(); it != m_meshes.end()){
-    glDeleteBuffers(1, &(*it).second);
+  for(auto it = m_meshes.begin(); it != m_meshes.end(); ++it){
+    glDeleteBuffers(1, &((*it).second.m_vbo));
   }
 }
 
@@ -119,12 +119,12 @@ void resourceManager::acquire(std::string pName, std::string file, float shine){
   }
 }
 
-material resourceManager::getMaterial(std::string name){
+resourceManager::material resourceManager::getMaterial(std::string name){
   material ret;
   auto itr = m_materials.find(name);
   
   if(itr != m_materials.end()){
-    ret = *itr;
+    ret = itr->second;
   } else {
     throw invalidResourceException("Invalid resource" + name);
   }
@@ -132,12 +132,12 @@ material resourceManager::getMaterial(std::string name){
   return ret;
 }
 
-mesh resourceManager::getMesh(std::string name){
+resourceManager::mesh resourceManager::getMesh(std::string name){
   mesh ret;
   auto itr = m_meshes.find(name);
   
   if(itr != m_meshes.end()){
-    ret = *itr;
+    ret = itr->second;
   } else {
     throw invalidResourceException("Invalid resource" + name);
   }
@@ -145,6 +145,6 @@ mesh resourceManager::getMesh(std::string name){
   return ret;
 }
 
-std::tuple<mesh, material> resourceManager::getResources(std::string name){
-  return std::tuple<mesh, material> (getMesh(name), getMaterial(name));
+std::tuple<resourceManager::mesh, resourceManager::material> resourceManager::getResources(std::string name){
+  return std::tuple<resourceManager::mesh, resourceManager::material> (getMesh(name), getMaterial(name));
 }

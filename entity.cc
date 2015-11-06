@@ -25,7 +25,7 @@ entity::entity(resourceManager::mesh mes, resourceManager::material mat, bool ha
   if(hasNormal){
     stride += 3;
   }
-  if(mat.m_diffMap != -1 || mat.m_specMap != -1){
+  if(mat.m_diffMap != (unsigned int)-1 || mat.m_specMap != (unsigned int)-1){
     stride += 2;
   }
   m_mesh.m_nVert /= stride;
@@ -54,7 +54,7 @@ entity::entity(resourceManager::mesh mes, resourceManager::material mat, bool ha
   ++attr;
   
   //texture coodinates
-  if(mat.m_diffMap != -1 || mat.m_specMap != -1){
+  if(mat.m_diffMap != (unsigned int)-1 || mat.m_specMap != (unsigned int)-1){
     unsigned int nData = 2;
     glVertexAttribPointer(attr, nData, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), (GLvoid*)(offset * sizeof(GLfloat)));
     glEnableVertexAttribArray(attr);
@@ -101,7 +101,7 @@ void entity::render(GLuint prog){
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
   
   //should bind vbo, not vao..
-  glBindVertexArray(m_VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, m_mesh.m_vbo);
   glDrawArrays(GL_TRIANGLES, 0, m_mesh.m_nVert);
-  glBindVertexArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
