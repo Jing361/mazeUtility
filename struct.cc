@@ -11,13 +11,16 @@
 int main(){
   //camera could be defined using ctor arguments
   //glRenderer renderer(glm::vec3(0,0,3), 1900, 1000);
+  renderer engine(1900, 1000);
   camera cam(glm::vec3(0,0,3), 1.5);
-  renderer engine(&cam, 1900, 1000);
   //parameter confirms existence of valid renderer
+  sceneManager manager(&engine);
   resourceManager rm(&engine);
   //parameter confirms existence of valid renderer, and tells renderer to use this manager for scene
-  sceneManager manager(&engine);
   shader basicShader("fragment.glsl", "vertex.glsl");
+  
+  engine.attachCamera(&cam);
+  engine.attachSceneManager(&manager);
   
   rm.acquire("crate", "mesh/crate.obj");
   rm.acquire("crate", "mat/crateA.png", 32);

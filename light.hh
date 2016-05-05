@@ -40,7 +40,7 @@ public:
   
   light(glm::vec3 position, glm::vec3 diff, glm::vec3 spec);
   
-  void getUniforms(GLuint prog, int index = -1);
+  std::string getUniforms(GLuint prog, int index = -1);
 };
 
 #endif

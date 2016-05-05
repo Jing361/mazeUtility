@@ -39,16 +39,18 @@ private:
   glm::mat4 view;
   glm::mat4 projection;
   camera* cam;
+  sceneManager* manager;
   std::multimap<GLint, entity> models;
   std::multimap<GLint, light> lights;
   std::multimap<GLint, spotLight> spots;
   void(*moveCam)(camera&, const float);
 
 public:
-  renderer(camera* pCam, unsigned int width, unsigned int height, std::string name =  "Untitled");
+  renderer(unsigned int width, unsigned int height, std::string name =  "Untitled");
   ~renderer();
   
   void attachCamera(camera* pCam);
+  void attachSceneManager(sceneManager* pMan);
   
   void registerObject(GLint target, entity& obj);
   void registerLight(GLint target, light& lite);

@@ -1,9 +1,10 @@
 #include"renderer.hh"
 
-renderer::renderer(camera* pCam, unsigned int width, unsigned int height, std::string name):
+renderer::renderer(unsigned int width, unsigned int height, std::string name):
   screenWidth(width),
   screenHeight(height),
-  cam(pCam){
+  cam(nullptr),
+  manager(nullptr){
   unsigned int glMajor = 3;
   unsigned int glminor = 3;
   
@@ -60,9 +61,15 @@ renderer::~renderer(){
   glfwTerminate();
 }
 
-void attachCamera(camera* pCam){
+void renderer::attachCamera(camera* pCam){
   if(pCam != nullptr){
     cam = pCam;
+  }
+}
+
+void renderer::attachSceneManager(sceneManager* pMan){
+  if(pMan != nullptr){
+    manager = pMan;
   }
 }
 

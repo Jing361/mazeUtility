@@ -20,7 +20,7 @@ light::light(glm::vec3 position, glm::vec3 diff, glm::vec3 spec):
   m_specular(spec){
 }
 
-void light::getUniforms(GLuint prog, int index){
+std::string light::getUniforms(GLuint prog, int index){
   std::string lightName(calcVarName("lights", index));
   
   GLint lightPosLoc       = glGetUniformLocation(prog, (lightName + ".position").c_str());
@@ -40,4 +40,6 @@ void light::getUniforms(GLuint prog, int index){
   glUniform1f(lightConstantLoc,  m_constant);
   glUniform1f(lightLinearLoc,    m_linear);
   glUniform1f(lightQuadraticLoc, m_quadratic);
+  
+  return lightName;
 }
